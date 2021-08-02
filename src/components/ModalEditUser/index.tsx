@@ -54,11 +54,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
 }) => {
   const formRef = useRef<FormHandles>(null);
 
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [uf, setUf] = useState("");
-  const [country, setCountry] = useState("");
-
   const handleSubmit = useCallback(
     async (data: IEditUserData) => {
       handleUpdateUser(data);
@@ -66,21 +61,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
     },
     [handleUpdateUser, setIsOpen]
   );
-
-  async function handleChange(event: React.FormEvent<HTMLInputElement>) {
-    if (event.currentTarget.value.length < 8) {
-      return;
-    } else {
-      const zicode = event.currentTarget.value;
-      const response = await axios.get(
-        `http://viacep.com.br/ws/${zicode}/json/`
-      );
-      setAddress(response.data["logradouro"]);
-      setCity(response.data["localidade"]);
-      setUf(response.data["uf"]);
-      setCountry("Brasil");
-    }
-  }
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -131,7 +111,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               type="number"
               name="zipcode"
-              onChange={handleChange}
               placeholder="Qual o CEP?"
             />
           </div>
@@ -140,8 +119,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <label>Endereço</label>
             <Input
               name="address"
-              // value={`${address}`}
-              // onChange={(e) => setAddress(e.target.value)}
               placeholder="Endereço"
             />
           </div>
@@ -161,8 +138,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="city"
               placeholder="Ex.: Russas"
-              // value={`${city}`}
-              // onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
@@ -171,8 +146,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="state"
               placeholder="Ex.: CE"
-              // value={`${uf}`}
-              // onChange={(e) => setUf(e.target.value)}
             />
           </div>
 
@@ -181,8 +154,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="country"
               placeholder="Ex.: Brasil"
-              // value={`${country}`}
-              // onChange={(e) => setCountry(e.target.value)}
             />
           </div>
 

@@ -131,7 +131,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               type="number"
               name="zipcode"
-              onChange={handleChange}
               placeholder="Qual o CEP?"
             />
           </div>
@@ -140,8 +139,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <label>Endereço</label>
             <Input
               name="address"
-              value={`${address}`}
-              onChange={(e) => setAddress(e.target.value)}
               placeholder="Endereço"
             />
           </div>
@@ -161,8 +158,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="city"
               placeholder="Ex.: Russas"
-              value={`${city}`}
-              onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
@@ -171,8 +166,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="state"
               placeholder="Ex.: CE"
-              value={`${uf}`}
-              onChange={(e) => setUf(e.target.value)}
             />
           </div>
 
@@ -181,8 +174,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
             <Input
               name="country"
               placeholder="Ex.: Brasil"
-              value={`${country}`}
-              onChange={(e) => setCountry(e.target.value)}
             />
           </div>
 

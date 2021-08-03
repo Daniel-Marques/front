@@ -95,6 +95,7 @@ const ModalEditUser: React.FC<IModalProps> = ({
             <Input
               name="name"
               placeholder="Digite o nome do usuário"
+              type="text"
             />
           </div>
 

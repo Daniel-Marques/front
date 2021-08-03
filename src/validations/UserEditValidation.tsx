@@ -3,7 +3,7 @@ import { ptForm } from "yup-locale-pt";
 
 yup.setLocale(ptForm);
 
-export const userSchema = yup.object().shape({
+export const userEditSchema = yup.object().shape({
   name: yup.string().required("O campo é obrigatório."),
   document: yup
     .string()
@@ -14,19 +14,6 @@ export const userSchema = yup.object().shape({
     .string()
     .email("Informe um e-mail válido")
     .required("O campo é obrigatório"),
-  // .test(
-  //   "unique-email",
-  //   "E-mail já cadastrado em nossa base",
-  //   async function (value) {
-  //     const { email } = this.parent;
-  //     const response = await api.get(`/users/email/${email}`);
-  //     if (response.data === false) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // ),
-  password: yup.string().required("O campo é obrigatório"),
   zipcode: yup.string().required("O campo é obrigatório"),
   address: yup.string().required("O campo é obrigatório"),
   number: yup.string(),

@@ -5,6 +5,7 @@ import AxiosMock from "axios-mock-adapter";
 import api from "../../services/api";
 
 import Users from "../../pages/Users";
+import { idText } from "typescript";
 
 const apiMock = new AxiosMock(api);
 
@@ -66,10 +67,14 @@ describe("Users", () => {
     const inputCountry = getByPlaceholderText("Ex.: Brasil");
 
     await act(async () => {
-      fireEvent.change(inputName, {target: { value: "Victor Sebastião Enzo Silveira" }});
+      fireEvent.change(inputName, {
+        target: { value: "Victor Sebastião Enzo Silveira" },
+      });
       fireEvent.change(inputDocument, { target: { value: "05087942857" } });
       fireEvent.change(inputPIS, { target: { value: "0023945-9" } });
-      fireEvent.change(inputEmail, {target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" }});
+      fireEvent.change(inputEmail, {
+        target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
+      });
       fireEvent.change(inputPassword, { target: { value: "123456789" } });
       fireEvent.change(inputZipcode, { target: { value: "62900000" } });
       fireEvent.change(inputAddress, { target: { value: "Rua Altônia" } });
@@ -155,19 +160,56 @@ describe("Users", () => {
     });
 
     const inputName = getByPlaceholderText("Digite o nome do usuário");
+    const inputDocument = getByPlaceholderText("Ex: 000.000.000-00");
+    const inputPIS = getByPlaceholderText("Ex: 000.00000.00-0");
+    const inputEmail = getByPlaceholderText("Informe aqui o E-mail");
+    const inputPassword = getByPlaceholderText("Informe aqui a senha");
+    const inputZipcode = getByPlaceholderText("Qual o CEP?");
+    const inputAddress = getByPlaceholderText("Endereço");
+    const inputNumber = getByPlaceholderText("Ex.: 123 ou S/N");
+    const inputComplement = getByPlaceholderText("Ex.: Casa");
+    const inputCity = getByPlaceholderText("Ex.: Russas");
+    const inputState = getByPlaceholderText("Ex.: CE");
+    const inputCountry = getByPlaceholderText("Ex.: Brasil");
 
     await act(async () => {
-      fireEvent.change(inputName, { target: { value: "Erica" } });
+      fireEvent.change(inputName, {
+        target: { value: "Victor Sebastião Enzo Silveira" },
+      });
+      fireEvent.change(inputDocument, { target: { value: "05087942857" } });
+      fireEvent.change(inputPIS, { target: { value: "0023945-9" } });
+      fireEvent.change(inputEmail, {
+        target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
+      });
+      fireEvent.change(inputPassword, { target: { value: "123456789" } });
+      fireEvent.change(inputZipcode, { target: { value: "62900000" } });
+      fireEvent.change(inputAddress, { target: { value: "Rua Altônia" } });
+      fireEvent.change(inputNumber, { target: { value: "234" } });
+      fireEvent.change(inputComplement, { target: { value: "Casa" } });
+      fireEvent.change(inputCity, { target: { value: "Russas" } });
+      fireEvent.change(inputState, { target: { value: "CE" } });
+      fireEvent.change(inputCountry, { target: { value: "Brasil" } });
     });
 
-    expect(inputName.value).toBe("Erica");
+    expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
+    expect(inputDocument.value).toBe("05087942857");
+    expect(inputPIS.value).toBe("0023945-9");
+    expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
+    expect(inputPassword.value).toBe("123456789");
+    expect(inputZipcode.value).toBe("62900000");
+    expect(inputAddress.value).toBe("Rua Altônia");
+    expect(inputNumber.value).toBe("234");
+    expect(inputComplement.value).toBe("Casa");
+    expect(inputCity.value).toBe("Russas");
+    expect(inputState.value).toBe("CE");
+    expect(inputCountry.value).toBe("Brasil");
 
     apiMock.onPut("users/1").reply(200, {
       id: 1,
-      name: "Erica",
-      document: "78924656789",
+      name: "Victor Sebastião Enzo Silveira",
+      document: "05087942857",
       pis: "0023945-9",
-      email: "ericarodrigues@gmail.com",
+      email: "victorsebastiaoenzosilveira_@br.pwc.com",
       password: "12345678",
       zipcode: "02817040",
       address: "Rua Altônia",
@@ -182,11 +224,8 @@ describe("Users", () => {
       fireEvent.click(getByTestId("edit-user-button"));
     });
 
-    await waitFor(() => expect(getByText("Erica")).toBeTruthy(), {
-      timeout: 200,
-    });
-
-    expect(getByText("Erica")).toBeTruthy();
+    expect(getByText("Victor Sebastião Enzo Silveira")).toBeTruthy();
+    expect(getByText("victorsebastiaoenzosilveira_@br.pwc.com")).toBeTruthy();
 
     expect(getByTestId("remove-user-1")).toBeTruthy();
     expect(getByTestId("edit-user-1")).toBeTruthy();

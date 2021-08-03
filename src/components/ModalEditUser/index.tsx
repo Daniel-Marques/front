@@ -2,6 +2,10 @@ import React, { useRef, useCallback } from "react";
 
 import { FormHandles } from "@unform/core";
 import { Form } from "./styles";
+
+import * as yup from "yup";
+import { userEditSchema } from "../../validations/UserEditValidation";
+
 import Modal from "../Modal";
 import Input from "../Input";
 
@@ -45,6 +49,10 @@ interface IEditUserData {
   country: string;
 }
 
+interface Errors {
+  [key: string]: string;
+}
+
 const ModalEditUser: React.FC<IModalProps> = ({
   isOpen,
   setIsOpen,
@@ -55,8 +63,23 @@ const ModalEditUser: React.FC<IModalProps> = ({
 
   const handleSubmit = useCallback(
     async (data: IEditUserData) => {
-      handleUpdateUser(data);
-      setIsOpen();
+      try {
+        // Remove all previous errors
+        formRef.current?.setErrors({});
+        await userEditSchema.validate(data, { abortEarly: false });
+        handleUpdateUser(data);
+        setIsOpen();
+      } catch (err) {
+        const validationErrors: Errors = {};
+
+        if (err instanceof yup.ValidationError) {
+          err.inner.forEach((error) => {
+            validationErrors[error.path!] = error.message;
+          });
+
+          formRef.current?.setErrors(validationErrors);
+        }
+      }
     },
     [handleUpdateUser, setIsOpen]
   );
@@ -71,7 +94,6 @@ const ModalEditUser: React.FC<IModalProps> = ({
             <Input
               name="name"
               placeholder="Digite o nome do usuário"
-              required
             />
           </div>
 

@@ -66,7 +66,7 @@ const ModalAddUser: React.FC<IModalProps> = ({
         // Remove all previous errors
         formRef.current?.setErrors({});
 
-        await userSchema.validate(data, { abortEarly: false });
+        userSchema.validate(data, { abortEarly: true });
 
         // Validation passed
         handleAddUser(data);

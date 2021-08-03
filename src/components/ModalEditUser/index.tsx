@@ -65,16 +65,25 @@ const ModalEditUser: React.FC<IModalProps> = ({
   const handleSubmit = useCallback(
     async (data: IEditUserData) => {
       try {
+
+        // Replaced CPF
         const doc1 = data.document;
         const doc2 = doc1.replace(".", "");
         const doc3 = doc2.replace(".", "");
         const doc4 = doc3.replace(".", "");
         const doc5 = doc4.replace("-", "");
+
+        // Replaced PIS
+        const pis1 = data.pis;
+        const pis2 = pis1.replace(".", "");
+        const pis3 = pis2.replace(".", "");
+        const pis4 = pis3.replace("-", "");
+
         // Remove all previous errors
         formRef.current?.setErrors({});
         await userEditSchema.validate(data, { abortEarly: false });
 
-        handleUpdateUser({ ...data, document: doc5 });
+        handleUpdateUser({ ...data, document: doc5, pis: pis4 });
         setIsOpen();
       } catch (err) {
         const validationErrors: Errors = {};
@@ -112,7 +121,11 @@ const ModalEditUser: React.FC<IModalProps> = ({
 
           <div className="col-lg-6 mb-3">
             <label>Número do PIS</label>
-            <Input name="pis" placeholder="Ex: 000.00000.00-0" />
+            <InputMask
+              mask="999.99999.99-9"
+              name="pis"
+              placeholder="Ex: 000.00000.00-0"
+            />
           </div>
 
           <div className="col-lg-6 mb-3">

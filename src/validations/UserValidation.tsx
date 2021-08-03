@@ -19,7 +19,7 @@ export const userSchema = yup.object().shape({
     }),
   pis: yup
     .string()
-    .length(11, "PIS deve conter 11 caractes")
+    .length(14, "PIS deve conter 14 caracteres")
     .required("O campo é obrigatório")
     .test("is-pis", "PIS inválido", async function (value) {
         const { pis } = this.parent;

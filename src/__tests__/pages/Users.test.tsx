@@ -5,7 +5,6 @@ import AxiosMock from "axios-mock-adapter";
 import api from "../../services/api";
 
 import Users from "../../pages/Users";
-import { idText } from "typescript";
 
 const apiMock = new AxiosMock(api);
 
@@ -71,7 +70,7 @@ describe("Users", () => {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
       fireEvent.change(inputDocument, { target: { value: "050.879.428-57" } });
-      fireEvent.change(inputPIS, { target: { value: "13319226648" } });
+      fireEvent.change(inputPIS, { target: { value: "133.19226.64-8" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
       });
@@ -87,7 +86,7 @@ describe("Users", () => {
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
     expect(inputDocument.value).toBe("050.879.428-57");
-    expect(inputPIS.value).toBe("13319226648");
+    expect(inputPIS.value).toBe("133.19226.64-8");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");
     expect(inputZipcode.value).toBe("62900000");
@@ -177,7 +176,7 @@ describe("Users", () => {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
       fireEvent.change(inputDocument, { target: { value: "050.879.428-57" } });
-      fireEvent.change(inputPIS, { target: { value: "13319226648" } });
+      fireEvent.change(inputPIS, { target: { value: "133.19226.64-8" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
       });
@@ -193,7 +192,7 @@ describe("Users", () => {
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
     expect(inputDocument.value).toBe("050.879.428-57");
-    expect(inputPIS.value).toBe("13319226648");
+    expect(inputPIS.value).toBe("133.19226.64-8");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");
     expect(inputZipcode.value).toBe("62900000");

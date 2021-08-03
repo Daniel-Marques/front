@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { validateCPF } from "validations-br";
 import { ptForm } from "yup-locale-pt";
 
 yup.setLocale(ptForm);
@@ -8,7 +9,14 @@ export const userEditSchema = yup.object().shape({
   document: yup
     .string()
     .length(11, "CPF deve conter 11 caracteres")
-    .required("O campo é obrigatório."),
+    .required("O campo é obrigatório.")
+    .test("is-cpf", "CPF não é válido", async function (value) {
+      const { document } = this.parent;
+      if (validateCPF(document) === false) {
+        return false;
+      }
+      return true;
+    }),
   pis: yup.string().required("O campo é obrigatório"),
   email: yup
     .string()

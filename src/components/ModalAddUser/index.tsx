@@ -8,6 +8,7 @@ import { userSchema } from "../../validations/UserValidation";
 
 import Modal from "../Modal";
 import Input from "../Input";
+import InputMask from "../InputMask";
 
 interface IUser {
   id: number;
@@ -63,12 +64,18 @@ const ModalAddUser: React.FC<IModalProps> = ({
   const handleSubmit = useCallback(
     async (data: ICreateUserData) => {
       try {
+        const doc1 = data.document;
+        const doc2 = doc1.replace(".", "");
+        const doc3 = doc2.replace(".", "");
+        const doc4 = doc3.replace(".", "");
+        const doc5 = doc4.replace("-", "");
+
         // Remove all previous errors
         formRef.current?.setErrors({});
         await userSchema.validate(data, { abortEarly: false });
 
         // Validation passed
-        handleAddUser(data);
+        handleAddUser({ ...data, document: doc5 });
         setIsOpen();
       } catch (err) {
         const validationErrors: Errors = {};
@@ -97,7 +104,11 @@ const ModalAddUser: React.FC<IModalProps> = ({
 
           <div className="col-lg-6 mb-3">
             <label>CPF</label>
-            <Input name="document" placeholder="Ex: 000.000.000-00" />
+            <InputMask
+              mask="999.999.999-99"
+              name="document"
+              placeholder="Ex: 000.000.000-00"
+            />
           </div>
 
           <div className="col-lg-6 mb-3">

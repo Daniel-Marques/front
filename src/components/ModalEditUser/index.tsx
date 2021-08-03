@@ -8,6 +8,7 @@ import { userEditSchema } from "../../validations/UserEditValidation";
 
 import Modal from "../Modal";
 import Input from "../Input";
+import InputMask from "../InputMask";
 
 interface IUser {
   id: number;
@@ -64,10 +65,16 @@ const ModalEditUser: React.FC<IModalProps> = ({
   const handleSubmit = useCallback(
     async (data: IEditUserData) => {
       try {
+        const doc1 = data.document;
+        const doc2 = doc1.replace(".", "");
+        const doc3 = doc2.replace(".", "");
+        const doc4 = doc3.replace(".", "");
+        const doc5 = doc4.replace("-", "");
         // Remove all previous errors
         formRef.current?.setErrors({});
         await userEditSchema.validate(data, { abortEarly: false });
-        handleUpdateUser(data);
+
+        handleUpdateUser({ ...data, document: doc5 });
         setIsOpen();
       } catch (err) {
         const validationErrors: Errors = {};
@@ -91,15 +98,16 @@ const ModalEditUser: React.FC<IModalProps> = ({
         <div className="row">
           <div className="col-lg-12 mb-3">
             <label>Nome do Usuário</label>
-            <Input
-              name="name"
-              placeholder="Digite o nome do usuário"
-            />
+            <Input name="name" placeholder="Digite o nome do usuário" />
           </div>
 
           <div className="col-lg-6 mb-3">
             <label>CPF</label>
-            <Input name="document" placeholder="Ex: 000.000.000-00" />
+            <InputMask
+              mask="999.999.999-99"
+              name="document"
+              placeholder="Ex: 000.000.000-00"
+            />
           </div>
 
           <div className="col-lg-6 mb-3">

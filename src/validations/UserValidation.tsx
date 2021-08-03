@@ -8,7 +8,7 @@ export const userSchema = yup.object().shape({
   name: yup.string().required("O campo é obrigatório."),
   document: yup
     .string()
-    .length(11, "CPF deve conter 11 caracteres")
+    .length(14, "CPF deve conter 14 caracteres")
     .required("O campo é obrigatório.")
     .test("is-cpf", "CPF inválido", async function (value) {
       const { document } = this.parent;

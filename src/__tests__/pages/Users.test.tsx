@@ -70,7 +70,7 @@ describe("Users", () => {
       fireEvent.change(inputName, {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
-      fireEvent.change(inputDocument, { target: { value: "05087942857" } });
+      fireEvent.change(inputDocument, { target: { value: "050.879.428-57" } });
       fireEvent.change(inputPIS, { target: { value: "13319226648" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
@@ -86,7 +86,7 @@ describe("Users", () => {
     });
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
-    expect(inputDocument.value).toBe("05087942857");
+    expect(inputDocument.value).toBe("050.879.428-57");
     expect(inputPIS.value).toBe("13319226648");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");
@@ -176,7 +176,7 @@ describe("Users", () => {
       fireEvent.change(inputName, {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
-      fireEvent.change(inputDocument, { target: { value: "05087942857" } });
+      fireEvent.change(inputDocument, { target: { value: "050.879.428-57" } });
       fireEvent.change(inputPIS, { target: { value: "13319226648" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
@@ -192,7 +192,7 @@ describe("Users", () => {
     });
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
-    expect(inputDocument.value).toBe("05087942857");
+    expect(inputDocument.value).toBe("050.879.428-57");
     expect(inputPIS.value).toBe("13319226648");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");

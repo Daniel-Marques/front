@@ -15,7 +15,7 @@ describe("Users", () => {
       {
         id: 1,
         name: "Daniel da Silva Marques",
-        pis: "0021568-9",
+        pis: "13319226648",
         document: "06408268307",
         password: "12345678",
         address: "Rua Maria das Graças da Silva",
@@ -71,7 +71,7 @@ describe("Users", () => {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
       fireEvent.change(inputDocument, { target: { value: "05087942857" } });
-      fireEvent.change(inputPIS, { target: { value: "0023945-9" } });
+      fireEvent.change(inputPIS, { target: { value: "13319226648" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
       });
@@ -87,7 +87,7 @@ describe("Users", () => {
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
     expect(inputDocument.value).toBe("05087942857");
-    expect(inputPIS.value).toBe("0023945-9");
+    expect(inputPIS.value).toBe("13319226648");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");
     expect(inputZipcode.value).toBe("62900000");
@@ -102,7 +102,7 @@ describe("Users", () => {
       id: 1,
       name: "Victor Sebastião Enzo Silveira",
       document: "05087942857",
-      pis: "0023945-9",
+      pis: "13319226648",
       email: "victorsebastiaoenzosilveira_@br.pwc.com",
       password: "12345678",
       zipcode: "02817040",
@@ -129,7 +129,7 @@ describe("Users", () => {
       {
         id: 1,
         name: "Daniel da Silva Marques",
-        pis: "0021568-9",
+        pis: "13319226648",
         document: "06408268307",
         password: "12345678",
         address: "Rua Maria das Graças da Silva",
@@ -177,7 +177,7 @@ describe("Users", () => {
         target: { value: "Victor Sebastião Enzo Silveira" },
       });
       fireEvent.change(inputDocument, { target: { value: "05087942857" } });
-      fireEvent.change(inputPIS, { target: { value: "0023945-9" } });
+      fireEvent.change(inputPIS, { target: { value: "13319226648" } });
       fireEvent.change(inputEmail, {
         target: { value: "victorsebastiaoenzosilveira_@br.pwc.com" },
       });
@@ -193,7 +193,7 @@ describe("Users", () => {
 
     expect(inputName.value).toBe("Victor Sebastião Enzo Silveira");
     expect(inputDocument.value).toBe("05087942857");
-    expect(inputPIS.value).toBe("0023945-9");
+    expect(inputPIS.value).toBe("13319226648");
     expect(inputEmail.value).toBe("victorsebastiaoenzosilveira_@br.pwc.com");
     expect(inputPassword.value).toBe("123456789");
     expect(inputZipcode.value).toBe("62900000");
@@ -208,7 +208,7 @@ describe("Users", () => {
       id: 1,
       name: "Victor Sebastião Enzo Silveira",
       document: "05087942857",
-      pis: "0023945-9",
+      pis: "13319226648",
       email: "victorsebastiaoenzosilveira_@br.pwc.com",
       password: "12345678",
       zipcode: "02817040",
@@ -236,7 +236,7 @@ describe("Users", () => {
       {
         id: 1,
         name: "Daniel da Silva Marques",
-        pis: "0021568-9",
+        pis: "13319226648",
         document: "06408268307",
         password: "12345678",
         address: "Rua Maria das Graças da Silva",

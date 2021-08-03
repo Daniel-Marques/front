@@ -3,9 +3,14 @@ import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
 import { Form } from "./styles";
+
+import * as yup from "yup";
+import { userEditSchema } from "../../validations/UserEditValidation";
+
 import Header from "../../components/Header";
 import Saudation from "../../components/Saudation";
 import Input from "../../components/Input";
+import InputMask from "../../components/InputMask";
 
 interface IEditProfileData {
   name: string;
@@ -20,6 +25,10 @@ interface IEditProfileData {
   city: string;
   state: string;
   country: string;
+}
+
+interface Errors {
+  [key: string]: string;
 }
 
 const Profile: React.FC = () => {
@@ -58,10 +67,38 @@ const Profile: React.FC = () => {
 
   const handleUpdateSubmit = useCallback(async (data: IEditProfileData) => {
     try {
+      // Replaced CPF
+      const doc1 = data.document;
+      const doc2 = doc1.replace(".", "");
+      const doc3 = doc2.replace(".", "");
+      const doc4 = doc3.replace(".", "");
+      const doc5 = doc4.replace("-", "");
+
+      // Replaced PIS
+      const pis1 = data.pis;
+      const pis2 = pis1.replace(".", "");
+      const pis3 = pis2.replace(".", "");
+      const pis4 = pis3.replace("-", "");
+
+      // Remove all previous errors
+      formRef.current?.setErrors({});
+      await userEditSchema.validate(data, { abortEarly: false });
+
+      const newData = { ...data, document: doc5, pis: pis4 };
+      console.log(newData);
+
       const id = 1;
-      await api.put(`/users/${id}`, [data]);
-    } catch (error) {
-      console.log(error);
+      await api.put(`/users/${id}`, newData);
+    } catch (err) {
+      const validationErrors: Errors = {};
+
+      if (err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          validationErrors[error.path!] = error.message;
+        });
+
+        formRef.current?.setErrors(validationErrors);
+      }
     }
   }, []);
 
@@ -85,27 +122,27 @@ const Profile: React.FC = () => {
                       <Input
                         name="name"
                         placeholder="Digite o nome do usuário"
-                        required
                         defaultValue={name}
                       />
                     </div>
 
                     <div className="col-lg-6 mb-3">
                       <label>CPF</label>
-                      <Input
+                      <InputMask
+                        mask="999.999.999-99"
                         name="document"
                         placeholder="Ex: 000.000.000-00"
-                        required
-                        defaultValue={document}
+                        value={document}
                       />
                     </div>
 
                     <div className="col-lg-6 mb-3">
                       <label>Número do PIS</label>
-                      <Input
+                      <InputMask
+                        mask="999.99999.99-9"
                         name="pis"
                         placeholder="Ex: 000.00000.00-0"
-                        defaultValue={pis}
+                        value={pis}
                       />
                     </div>
 

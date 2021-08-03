@@ -65,7 +65,6 @@ const ModalEditUser: React.FC<IModalProps> = ({
   const handleSubmit = useCallback(
     async (data: IEditUserData) => {
       try {
-
         // Replaced CPF
         const doc1 = data.document;
         const doc2 = doc1.replace(".", "");

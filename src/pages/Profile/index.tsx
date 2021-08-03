@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
@@ -6,6 +6,21 @@ import { Form } from "./styles";
 import Header from "../../components/Header";
 import Saudation from "../../components/Saudation";
 import Input from "../../components/Input";
+
+interface IEditProfileData {
+  name: string;
+  document: string;
+  pis: string;
+  email: string;
+  password: string;
+  zipcode: number;
+  address: string;
+  number: string;
+  complement: string;
+  city: string;
+  state: string;
+  country: string;
+}
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -24,23 +39,30 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     async function loadData() {
-      await api.get("/users/1").then((response) => {
-        const user = response.data;
-        setName(user.name);
-        setDocument(user.document);
-        setPis(user.pis);
-        setEmail(user.email);
-        setZipcode(user.zipcode);
-        setAddress(user.address);
-        setNumber(user.number);
-        setComplement(user.complement);
-        setCity(user.city);
-        setUf(user.state);
-        setCountry(user.country);
-      });
+      const response = await api.get("/users/1");
+      setName(response.data.name);
+      setDocument(response.data.document);
+      setPis(response.data.pis);
+      setEmail(response.data.email);
+      setZipcode(response.data.zipcode);
+      setAddress(response.data.address);
+      setNumber(response.data.number);
+      setComplement(response.data.complement);
+      setCity(response.data.city);
+      setUf(response.data.state);
+      setCountry(response.data.country);
     }
 
     loadData();
+  }, []);
+
+  const handleUpdateSubmit = useCallback(async (data: IEditProfileData) => {
+    try {
+      const id = 1;
+      await api.put(`/users/${id}`, [data]);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
@@ -56,7 +78,7 @@ const Profile: React.FC = () => {
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div className="card">
               <div className="card-body">
-                <Form ref={formRef} onSubmit={() => {}}>
+                <Form ref={formRef} onSubmit={handleUpdateSubmit}>
                   <div className="row">
                     <div className="col-lg-12 mb-3">
                       <label>Nome do Usuário</label>
@@ -104,7 +126,6 @@ const Profile: React.FC = () => {
                         name="password"
                         type="password"
                         placeholder="Informe aqui a senha"
-                        required
                       />
                     </div>
 
@@ -123,8 +144,6 @@ const Profile: React.FC = () => {
                       <label>Endereço</label>
                       <Input
                         name="address"
-                        // value={`${address}`}
-                        // onChange={(e) => setAddress(e.target.value)}
                         placeholder="Endereço"
                         defaultValue={address}
                       />
@@ -154,8 +173,6 @@ const Profile: React.FC = () => {
                         name="city"
                         placeholder="Ex.: Russas"
                         defaultValue={city}
-                        // value={`${city}`}
-                        // onChange={(e) => setCity(e.target.value)}
                       />
                     </div>
 
@@ -165,8 +182,6 @@ const Profile: React.FC = () => {
                         name="state"
                         placeholder="Ex.: CE"
                         defaultValue={uf}
-                        // value={`${uf}`}
-                        // onChange={(e) => setUf(e.target.value)}
                       />
                     </div>
 
@@ -176,8 +191,6 @@ const Profile: React.FC = () => {
                         name="country"
                         placeholder="Ex.: Brasil"
                         defaultValue={country}
-                        // value={`${country}`}
-                        // onChange={(e) => setCountry(e.target.value)}
                       />
                     </div>
 
@@ -185,7 +198,7 @@ const Profile: React.FC = () => {
                       <button
                         type="submit"
                         className="btn btn-labeled btn-primary"
-                        data-testid="edit-user-button"
+                        data-testid="edit-profile-button"
                         style={{ marginLeft: 12, borderRadius: 3, height: 40 }}
                       >
                         <span className="btn-label" style={{ height: 40 }}>

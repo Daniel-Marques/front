@@ -1,8 +1,4 @@
-import React, {
-  InputHTMLAttributes,
-  useEffect,
-  useRef,
-} from "react";
+import React, { InputHTMLAttributes, useEffect, useRef } from "react";
 
 import { IconBaseProps } from "react-icons";
 import { useField } from "@unform/core";
@@ -17,7 +13,7 @@ interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { fieldName, defaultValue, registerField } = useField(name);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -35,6 +31,7 @@ const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
         ref={inputRef}
         {...rest}
       />
+      {error && <div className="text-danger" style={{marginTop: 2}}>{error}</div>}
     </Container>
   );
 };

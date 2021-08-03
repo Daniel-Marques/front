@@ -1,5 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
-import axios from "axios";
+import React, { useRef, useCallback } from "react";
 
 import { FormHandles } from "@unform/core";
 import { Form } from "./styles";
@@ -78,7 +77,7 @@ const ModalAddUser: React.FC<IModalProps> = ({
 
           <div className="col-lg-6 mb-3">
             <label>CPF</label>
-            <Input name="document" placeholder="Ex: 000.000.000-00" required />
+            <Input name="document" placeholder="Ex: 000.000.000-00" />
           </div>
 
           <div className="col-lg-6 mb-3">
@@ -92,7 +91,6 @@ const ModalAddUser: React.FC<IModalProps> = ({
               name="email"
               type="email"
               placeholder="Informe aqui o E-mail"
-              required
             />
           </div>
 
@@ -102,25 +100,17 @@ const ModalAddUser: React.FC<IModalProps> = ({
               name="password"
               type="password"
               placeholder="Informe aqui a senha"
-              required
             />
           </div>
 
           <div className="col-lg-4 mb-3">
             <label>CEP</label>
-            <Input
-              type="number"
-              name="zipcode"
-              placeholder="Qual o CEP?"
-            />
+            <Input type="number" name="zipcode" placeholder="Qual o CEP?" />
           </div>
 
           <div className="col-lg-8 mb-3">
             <label>Endereço</label>
-            <Input
-              name="address"
-              placeholder="Endereço"
-            />
+            <Input name="address" placeholder="Endereço" />
           </div>
 
           <div className="col-lg-4 mb-3">
@@ -135,26 +125,17 @@ const ModalAddUser: React.FC<IModalProps> = ({
 
           <div className="col-lg-4 mb-3">
             <label>Cidade</label>
-            <Input
-              name="city"
-              placeholder="Ex.: Russas"
-            />
+            <Input name="city" placeholder="Ex.: Russas" />
           </div>
 
           <div className="col-lg-4 mb-3">
             <label>UF</label>
-            <Input
-              name="state"
-              placeholder="Ex.: CE"
-            />
+            <Input name="state" placeholder="Ex.: CE" />
           </div>
 
           <div className="col-lg-4 mb-3">
             <label>País</label>
-            <Input
-              name="country"
-              placeholder="Ex.: Brasil"
-            />
+            <Input name="country" placeholder="Ex.: Brasil" />
           </div>
 
           <div className="col-12">

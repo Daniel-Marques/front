@@ -48,7 +48,10 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     async function loadData() {
-      const response = await api.get("/users/1");
+      const token = localStorage.getItem("@newmission:token");
+      const user = JSON.parse(`${token}`);
+
+      const response = await api.get(`/users/${user.user.id}`);
       setName(response.data.name);
       setDocument(response.data.document);
       setPis(response.data.pis);
@@ -87,8 +90,9 @@ const Profile: React.FC = () => {
       const newData = { ...data, document: doc5, pis: pis4 };
       console.log(newData);
 
-      const id = 1;
-      await api.put(`/users/${id}`, newData);
+      const token = localStorage.getItem("@newmission:token");
+      const user = JSON.parse(`${token}`);
+      await api.put(`/users/${user.user.id}`, newData);
     } catch (err) {
       const validationErrors: Errors = {};
 

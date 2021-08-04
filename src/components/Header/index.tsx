@@ -32,7 +32,7 @@ const Header: React.FC = () => {
             <div className="col-lg-8 col-md-8 col-sm-8 col-xs-12">
               <div className="header-top-menu">
                 <ul className="nav navbar-nav notika-top-nav">
-                  <li className="nav-item dropdown">
+                  <li className="nav-item">
                     <a href="/profile" title="Meu Perfil" className="nav-link">
                       <span>
                         <img

@@ -32,7 +32,7 @@ const Signin: React.FC = () => {
         const { data } = response;
 
         if (data) {
-          localStorage.setItem("@newmission:token", data);
+          localStorage.setItem("@newmission:token", JSON.stringify(data));
           history.push("/users");
         }
       });

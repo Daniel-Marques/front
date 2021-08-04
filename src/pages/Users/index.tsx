@@ -25,6 +25,7 @@ interface IUser {
 }
 
 const Users: React.FC = () => {
+  const [username, setUserName] = useState('');
   const [users, setUsers] = useState<IUser[]>([]);
   const [editingUser, setEditingUser] = useState<IUser>({} as IUser);
   const [modalOpen, setModalOpen] = useState(false);
@@ -32,8 +33,12 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     async function loadUsers(): Promise<void> {
+      const token = localStorage.getItem("@newmission:token");
+      const username = JSON.parse(`${token}`);
+
       const response = await api.get("/users");
       setUsers(response.data);
+      setUserName(username.user.name);
     }
 
     loadUsers();
@@ -108,7 +113,7 @@ const Users: React.FC = () => {
 
         <div className="row">
           <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <Saudation title="Olá," subtitle="Daniel Marques" />
+            <Saudation title="Olá," subtitle={`${username}`} />
 
             <ButtonAddUser openModal={toggleModal} />
           </div>

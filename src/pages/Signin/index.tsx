@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from "react";
+import { useHistory } from "react-router";
 import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
@@ -18,6 +19,7 @@ interface ILogin {
 
 const Signin: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
 
   const handleSignin = useCallback(async (data: ILogin) => {
     try {
@@ -26,9 +28,14 @@ const Signin: React.FC = () => {
       await userLoginSchema.validate(data, { abortEarly: false });
 
       // Validation passed
-      await api.post('/auth/token', data).then(result => {
-        console.log(result.data);
-      })
+      await api.post("/auth/token", data).then((response) => {
+        const { data } = response;
+
+        if (data) {
+          localStorage.setItem("@newmission:token", data);
+          history.push("/users");
+        }
+      });
     } catch (err) {
       const validationErrors: Errors = {};
 
@@ -64,7 +71,11 @@ const Signin: React.FC = () => {
                 <i className="fa fa-user"></i>
               </span>
               <div className="nk-int-st">
-                <InputSignin type="text" name="email" placeholder="Seu e-mail" />
+                <InputSignin
+                  type="text"
+                  name="email"
+                  placeholder="Seu e-mail"
+                />
               </div>
             </div>
 

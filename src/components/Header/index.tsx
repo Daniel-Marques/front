@@ -1,6 +1,14 @@
 import React from "react";
+import { useHistory } from "react-router";
 
 const Header: React.FC = () => {
+  const history = useHistory();
+
+  function handleLogout() {
+    localStorage.removeItem("@newmission:token");
+    history.push("/");
+  }
+
   return (
     <div className="header-top-area">
       <div className="container">
@@ -22,11 +30,7 @@ const Header: React.FC = () => {
               <div className="header-top-menu">
                 <ul className="nav navbar-nav notika-top-nav">
                   <li className="nav-item dropdown">
-                    <a
-                      href="/profile"
-                      title="Meu Perfil"
-                      className="nav-link"
-                    >
+                    <a href="/profile" title="Meu Perfil" className="nav-link">
                       <span>
                         <img
                           src="./assets/images/user.png"
@@ -37,7 +41,12 @@ const Header: React.FC = () => {
                     </a>
                   </li>
                   <li className="nav-item dropdown">
-                    <a href="/" className="nav-link" title="Sair do Sistema">
+                    <a
+                      onClick={handleLogout}
+                      href="/"
+                      className="nav-link"
+                      title="Sair do Sistema"
+                    >
                       <span>
                         <img
                           src="./assets/images/logout.png"

@@ -1,6 +1,47 @@
-import React from "react";
+import React, { useRef, useCallback } from "react";
+import api from "../../services/api";
+
+import { FormHandles } from "@unform/core";
+import InputSignin from "../../components/InputSignin";
+
+import { Form } from "./styles";
+import * as yup from "yup";
+import { userLoginSchema } from "../../validations/UserLoginValidation";
+
+interface Errors {
+  [key: string]: string;
+}
+interface ILogin {
+  email: String;
+  password: String;
+}
 
 const Signin: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSignin = useCallback(async (data: ILogin) => {
+    try {
+      // Remove all previous errors
+      formRef.current?.setErrors({});
+      await userLoginSchema.validate(data, { abortEarly: false });
+
+      // Validation passed
+      await api.post('/auth/token', data).then(result => {
+        console.log(result.data);
+      })
+    } catch (err) {
+      const validationErrors: Errors = {};
+
+      if (err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          validationErrors[error.path!] = error.message;
+        });
+
+        formRef.current?.setErrors(validationErrors);
+      }
+    }
+  }, []);
+
   return (
     <div className="login-content">
       <div
@@ -17,40 +58,38 @@ const Signin: React.FC = () => {
         <h2>Olá Visitante</h2>
         <p>Insira seus dados abaixo para acessar:</p>
         <div className="nk-form mt-5">
-          <div className="input-group">
-            <span className="input-group-addon nk-ic-st-pro">
-              <i className="fa fa-user"></i>
-            </span>
-            <div className="nk-int-st">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Seu número do PIS"
-              />
-            </div>
-          </div>
-
-          <div className="input-group mg-t-15">
-            <span className="input-group-addon nk-ic-st-pro">
-              <i className="fa fa-lock"></i>
-            </span>
-            <div className="nk-int-st">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Sua senha super secreta"
-              />
+          <Form ref={formRef} onSubmit={handleSignin}>
+            <div className="input-group">
+              <span className="input-group-addon nk-ic-st-pro">
+                <i className="fa fa-user"></i>
+              </span>
+              <div className="nk-int-st">
+                <InputSignin type="text" name="email" placeholder="Seu e-mail" />
+              </div>
             </div>
 
-            <a
-              href="/users"
-              data-ma-action="nk-login-switch"
-              data-ma-block="#l-register"
-              className="btn btn-login btn-success btn-float"
-            >
-              <i className="notika-icon notika-right-arrow right-arrow-ant"></i>
-            </a>
-          </div>
+            <div className="input-group mg-t-15">
+              <span className="input-group-addon nk-ic-st-pro">
+                <i className="fa fa-lock"></i>
+              </span>
+              <div className="nk-int-st">
+                <InputSignin
+                  type="password"
+                  name="password"
+                  placeholder="Sua senha super secreta"
+                />
+              </div>
+
+              <button
+                type="submit"
+                data-ma-action="nk-login-switch"
+                data-ma-block="#l-register"
+                className="btn btn-login btn-success btn-float"
+              >
+                <i className="notika-icon notika-right-arrow right-arrow-ant"></i>
+              </button>
+            </div>
+          </Form>
         </div>
 
         <div className="nk-navigation nk-lg-ic">

@@ -1,5 +1,8 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { useHistory } from "react-router";
+
+import { Link } from "./styles";
 
 const Header: React.FC = () => {
   const history = useHistory();
@@ -40,12 +43,12 @@ const Header: React.FC = () => {
                       </span>
                     </a>
                   </li>
-                  <li className="nav-item dropdown">
-                    <a
+                  <li className="nav-item">
+                    <Link
                       onClick={handleLogout}
-                      href="/"
                       className="nav-link"
                       title="Sair do Sistema"
+                      style={{}}
                     >
                       <span>
                         <img
@@ -54,7 +57,7 @@ const Header: React.FC = () => {
                           style={{ width: 20, color: "white" }}
                         />
                       </span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

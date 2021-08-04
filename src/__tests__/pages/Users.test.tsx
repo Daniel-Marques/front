@@ -7,7 +7,7 @@ import api from "../../services/api";
 import Users from "../../pages/Users";
 
 const apiMock = new AxiosMock(api);
-const mockLocalStorage = {
+const mockSessionStorage = {
   user: {
     id: 2,
     name: "Daniel Marques",
@@ -19,7 +19,7 @@ const mockLocalStorage = {
 
 describe("Users", () => {
   it("should be able to list all the users from your api", async () => {
-    localStorage.setItem("@newmission:data", JSON.stringify(mockLocalStorage));
+    sessionStorage.setItem("@newmission:data", JSON.stringify(mockSessionStorage));
 
     apiMock.onGet("users").reply(200, [
       {

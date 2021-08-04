@@ -19,9 +19,7 @@ interface ILogin {
 }
 
 const Signin: React.FC = () => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookies();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookies] = useCookies(["access_token"]);
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
@@ -30,7 +28,7 @@ const Signin: React.FC = () => {
     const sessionCookie = cookie.get("@newmission:access_token");
 
     if (!sessionCookie) {
-      localStorage.removeItem("@newmission:data");
+      sessionStorage.removeItem("@newmission:data");
     } else {
       setTimeout(() => {
         history.push("/users");
@@ -51,11 +49,9 @@ const Signin: React.FC = () => {
 
           if (data) {
             let expires = new Date();
-
             expires.setTime(expires.getTime() + 12500 * 10);
-            // expires.setTime(expires.getTime() + (12500 * 24));
 
-            localStorage.setItem("@newmission:data", JSON.stringify(data));
+            sessionStorage.setItem("@newmission:data", JSON.stringify(data));
             setCookies("@newmission:access_token", data.access_token, {
               path: "/",
               expires,

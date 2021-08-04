@@ -17,10 +17,6 @@ const PrivateRouter = (
   const cookie = new Cookies();
   const isLogged = !!cookie.get("@newmission:access_token");
 
-  if (!isLogged) {
-    localStorage.removeItem("@newmission:data");
-  }
-
   return isLogged ? <Route {...props} /> : <Redirect to="/" />;
 };
 

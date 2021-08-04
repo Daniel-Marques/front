@@ -1,14 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { useHistory } from "react-router";
+import { Cookies } from "react-cookie";
 
 import { Link } from "./styles";
 
 const Header: React.FC = () => {
+  const cookie = new Cookies();
   const history = useHistory();
 
   function handleLogout() {
-    localStorage.removeItem("@newmission:token");
+    sessionStorage.removeItem("@newmission:data");
+    cookie.remove("@newmission:access_token");
     history.push("/");
   }
 

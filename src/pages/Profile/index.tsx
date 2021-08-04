@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     async function loadData() {
-      const token = localStorage.getItem("@newmission:token");
+      const token = sessionStorage.getItem("@newmission:data");
       const user = JSON.parse(`${token}`);
 
       const response = await api.get(`/users/${user.user.id}`);
@@ -90,7 +90,7 @@ const Profile: React.FC = () => {
       const newData = { ...data, document: doc5, pis: pis4 };
       console.log(newData);
 
-      const token = localStorage.getItem("@newmission:token");
+      const token = sessionStorage.getItem("@newmission:token");
       const user = JSON.parse(`${token}`);
       await api.put(`/users/${user.user.id}`, newData);
     } catch (err) {

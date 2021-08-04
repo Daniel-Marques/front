@@ -1,5 +1,6 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
+import { useCookies, Cookies } from "react-cookie";
 import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
@@ -18,36 +19,65 @@ interface ILogin {
 }
 
 const Signin: React.FC = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const cookie = new Cookies();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookies] = useCookies(["access_token"]);
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
-  const handleSignin = useCallback(async (data: ILogin) => {
-    try {
-      // Remove all previous errors
-      formRef.current?.setErrors({});
-      await userLoginSchema.validate(data, { abortEarly: false });
+  useEffect(() => {
+    const sessionCookie = cookie.get("@newmission:access_token");
 
-      // Validation passed
-      await api.post("/auth/token", data).then((response) => {
-        const { data } = response;
-
-        if (data) {
-          localStorage.setItem("@newmission:token", JSON.stringify(data));
-          history.push("/users");
-        }
-      });
-    } catch (err) {
-      const validationErrors: Errors = {};
-
-      if (err instanceof yup.ValidationError) {
-        err.inner.forEach((error) => {
-          validationErrors[error.path!] = error.message;
-        });
-
-        formRef.current?.setErrors(validationErrors);
-      }
+    if (!sessionCookie) {
+      localStorage.removeItem("@newmission:data");
+    } else {
+      setTimeout(() => {
+        history.push("/users");
+      }, 1200);
     }
-  }, []);
+  }, [cookie, history]);
+
+  const handleSignin = useCallback(
+    async (data: ILogin) => {
+      try {
+        // Remove all previous errors
+        formRef.current?.setErrors({});
+        await userLoginSchema.validate(data, { abortEarly: false });
+
+        // Validation passed
+        await api.post("/auth/token", data).then((response) => {
+          const { data } = response;
+
+          if (data) {
+            let expires = new Date();
+
+            expires.setTime(expires.getTime() + 12500 * 10);
+            // expires.setTime(expires.getTime() + (12500 * 24));
+
+            localStorage.setItem("@newmission:data", JSON.stringify(data));
+            setCookies("@newmission:access_token", data.access_token, {
+              path: "/",
+              expires,
+            });
+
+            history.push("/users");
+          }
+        });
+      } catch (err) {
+        const validationErrors: Errors = {};
+
+        if (err instanceof yup.ValidationError) {
+          err.inner.forEach((error) => {
+            validationErrors[error.path!] = error.message;
+          });
+
+          formRef.current?.setErrors(validationErrors);
+        }
+      }
+    },
+    [history, setCookies]
+  );
 
   return (
     <div className="login-content">

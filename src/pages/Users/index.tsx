@@ -33,7 +33,7 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     async function loadUsers(): Promise<void> {
-      const token = localStorage.getItem("@newmission:token");
+      const token = localStorage.getItem("@newmission:data");
       const username = JSON.parse(`${token}`);
 
       const response = await api.get("/users");

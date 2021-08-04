@@ -7,9 +7,20 @@ import api from "../../services/api";
 import Users from "../../pages/Users";
 
 const apiMock = new AxiosMock(api);
+const mockLocalStorage = {
+  user: {
+    id: 2,
+    name: "Daniel Marques",
+    email: "daniel.silva.city@gmail.com",
+  },
+  access_token:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5pZWwuc2lsdmEuY2l0eUBnbWFpbC5jb20iLCJleHAiOjE2MjgyODMxMzZ9.W4dUlzowHF777RGyseqGVaWUG8YVSFl6W-XjMi-tG0I",
+};
 
 describe("Users", () => {
   it("should be able to list all the users from your api", async () => {
+    localStorage.setItem("@newmission:data", JSON.stringify(mockLocalStorage));
+
     apiMock.onGet("users").reply(200, [
       {
         id: 1,

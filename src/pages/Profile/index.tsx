@@ -138,6 +138,7 @@ const Profile: React.FC = () => {
       return;
     } else {
       localStorage.removeItem("@newmission:data");
+      sessionStorage.removeItem("@newmission:toast");
       cookie.remove("@newmission:access_token");
       history.replace("/");
     }

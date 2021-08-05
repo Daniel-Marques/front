@@ -25,7 +25,7 @@ interface IUser {
 }
 
 const Users: React.FC = () => {
-  const [username, setUserName] = useState('');
+  const [username, setUserName] = useState("");
   const [users, setUsers] = useState<IUser[]>([]);
   const [editingUser, setEditingUser] = useState<IUser>({} as IUser);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,11 +33,11 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     async function loadUsers(): Promise<void> {
-      const token = sessionStorage.getItem("@newmission:data");
-      const username = JSON.parse(`${token}`);
-
       const response = await api.get("/users");
       setUsers(response.data);
+
+      const token = localStorage.getItem("@newmission:data");
+      const username = JSON.parse(`${token}`);
       setUserName(username.user.name);
     }
 

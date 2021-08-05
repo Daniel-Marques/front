@@ -10,7 +10,7 @@ const Header: React.FC = () => {
   const history = useHistory();
 
   function handleLogout() {
-    sessionStorage.removeItem("@newmission:data");
+    localStorage.removeItem("@newmission:data");
     cookie.remove("@newmission:access_token");
     history.push("/");
   }

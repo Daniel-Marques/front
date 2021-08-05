@@ -19,7 +19,7 @@ const mockSessionStorage = {
 
 describe("Users", () => {
   it("should be able to list all the users from your api", async () => {
-    sessionStorage.setItem("@newmission:data", JSON.stringify(mockSessionStorage));
+    localStorage.setItem("@newmission:data", JSON.stringify(mockSessionStorage));
 
     apiMock.onGet("users").reply(200, [
       {

@@ -44,6 +44,10 @@ const Users: React.FC = () => {
   const [cookies, setCookies] = useCookies(["toast"]);
 
   useEffect(() => {
+    const dataStorage = localStorage.getItem("@newmission:data");
+    const username = JSON.parse(`${dataStorage}`);
+    setUserName(username.user.name);
+    
     loadToastInitial();
     setInterval(() => {
       loadUsers();
@@ -65,10 +69,6 @@ const Users: React.FC = () => {
     });
 
     setUsers(response.data);
-
-    const dataStorage = localStorage.getItem("@newmission:data");
-    const username = JSON.parse(`${dataStorage}`);
-    setUserName(username.user.name);
   }
 
   async function handleAddUser(

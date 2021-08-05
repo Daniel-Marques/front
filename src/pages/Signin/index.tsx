@@ -56,7 +56,7 @@ const Signin: React.FC = () => {
 
             /* Create cookie */
             let expires = new Date();
-            expires.setTime(expires.getTime() + 12500 * 10);
+            expires.setTime(expires.getTime() + (24*60*60*1000));
             setCookies("@newmission:access_token", data.access_token, {
               path: "/",
               expires,

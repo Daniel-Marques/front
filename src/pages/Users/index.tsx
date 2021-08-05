@@ -47,30 +47,28 @@ const Users: React.FC = () => {
     const dataStorage = localStorage.getItem("@newmission:data");
     const username = JSON.parse(`${dataStorage}`);
     setUserName(username.user.name);
-    
-    loadToastInitial();
-    setInterval(() => {
-      loadUsers();
-    }, 4000)
-    redirectPage();
-  }, [loadUsers, redirectPage]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  async function loadUsers() {
-    const token = cookie.get("@newmission:access_token");
-    if (!token) {
-      setAuthorized(false);
+    async function loadUsers(): Promise<void> {
+      const token = cookie.get("@newmission:access_token");
+      if (!token) {
+        setAuthorized(false);
+      }
+
+      const response = await api.get("/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUsers(response.data);
     }
 
-    const response = await api.get("/users", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    loadUsers()
+    loadToastInitial();
+    redirectPage();
+  }, [cookie, redirectPage]);
 
-    setUsers(response.data);
-  }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function handleAddUser(
     user: Omit<IUser, "id" | "updated_at">
   ): Promise<void> {

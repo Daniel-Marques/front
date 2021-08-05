@@ -89,7 +89,7 @@ const Profile: React.FC = () => {
 
     loadData();
     redirectPage();
-  }, [cookie, history, redirectPage]);
+  }, []);
 
   const handleUpdateSubmit = useCallback(async (data: IEditProfileData) => {
     try {

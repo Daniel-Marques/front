@@ -11,6 +11,7 @@ const Header: React.FC = () => {
 
   function handleLogout() {
     localStorage.removeItem("@newmission:data");
+    sessionStorage.removeItem("@newmission:toast");
     cookie.remove("@newmission:access_token");
     history.replace("/");
   }

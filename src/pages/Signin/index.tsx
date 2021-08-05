@@ -74,7 +74,7 @@ const Signin: React.FC = () => {
             }
           })
           .catch((err) => {
-            toast("😓 Não encontrei um usuário com esses dados.", {
+            toast("Oops! E-mail ou senha está errado.", {
               position: "top-right",
             });
           });

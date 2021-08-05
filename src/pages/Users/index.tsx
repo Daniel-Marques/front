@@ -30,7 +30,6 @@ interface IUser {
 }
 
 const Users: React.FC = () => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookies();
   const history = useHistory();
 
@@ -71,7 +70,6 @@ const Users: React.FC = () => {
     redirectPage();
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function handleAddUser(
     user: Omit<IUser, "id" | "updated_at">
   ): Promise<void> {
@@ -83,7 +81,6 @@ const Users: React.FC = () => {
     }
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function redirectPage() {
     if (authorized) {
       return;
@@ -142,7 +139,6 @@ const Users: React.FC = () => {
     toggleEditModal();
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   function loadToastInitial() {
     const toastSessionStorage = sessionStorage.getItem("@newmission:toast");
 

@@ -132,7 +132,6 @@ const Profile: React.FC = () => {
     }
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function redirectPage() {
     if (authorized) {
       return;

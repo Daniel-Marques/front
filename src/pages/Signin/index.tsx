@@ -1,6 +1,11 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
 import { useCookies, Cookies } from "react-cookie";
+import {} from "react-toast-notifications";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
@@ -47,25 +52,32 @@ const Signin: React.FC = () => {
         await userLoginSchema.validate(data, { abortEarly: false });
 
         /* Validation passed */
-        await api.post("/auth/token", data).then((response) => {
-          const { data } = response;
+        await api
+          .post("/auth/token", data)
+          .then((response) => {
+            const { data } = response;
 
-          if (data) {
-            /* Create localStorage */
-            localStorage.setItem("@newmission:data", JSON.stringify(data));
+            if (data) {
+              /* Create localStorage */
+              localStorage.setItem("@newmission:data", JSON.stringify(data));
 
-            /* Create cookie */
-            let expires = new Date();
-            expires.setTime(expires.getTime() + (24*60*60*1000));
-            setCookies("@newmission:access_token", data.access_token, {
-              path: "/",
-              expires,
+              /* Create cookie */
+              let expires = new Date();
+              expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+              setCookies("@newmission:access_token", data.access_token, {
+                path: "/",
+                expires,
+              });
+
+              /* Redirect for router user */
+              history.push("/users");
+            }
+          })
+          .catch((err) => {
+            toast("😓 Não encontrei um usuário com esses dados.", {
+              position: "top-right",
             });
-
-            /* Redirect for router user */
-            history.push("/users");
-          }
-        });
+          });
       } catch (err) {
         const validationErrors: Errors = {};
 
@@ -82,80 +94,83 @@ const Signin: React.FC = () => {
   );
 
   return (
-    <div className="login-content">
-      <div
-        className="nk-block toggled"
-        id="l-login"
-        style={{ minHeight: "80vh" }}
-      >
-        <img
-          src="./assets/img/logo_pontotel.png"
-          alt="Logo PontoTel"
-          className="mb-4"
-          style={{ width: 300 }}
-        />
-        <h2>Olá Visitante</h2>
-        <p>Insira seus dados abaixo para acessar:</p>
-        <div className="nk-form mt-5">
-          <Form ref={formRef} onSubmit={handleSignin}>
-            <div className="input-group">
-              <span className="input-group-addon nk-ic-st-pro">
-                <i className="fa fa-user"></i>
-              </span>
-              <div className="nk-int-st">
-                <InputSignin
-                  type="text"
-                  name="email"
-                  placeholder="Seu e-mail"
-                />
-              </div>
-            </div>
-
-            <div className="input-group mg-t-15">
-              <span className="input-group-addon nk-ic-st-pro">
-                <i className="fa fa-lock"></i>
-              </span>
-              <div className="nk-int-st">
-                <InputSignin
-                  type="password"
-                  name="password"
-                  placeholder="Sua senha super secreta"
-                />
+    <>
+      <ToastContainer />
+      <div className="login-content">
+        <div
+          className="nk-block toggled"
+          id="l-login"
+          style={{ minHeight: "80vh" }}
+        >
+          <img
+            src="./assets/img/logo_pontotel.png"
+            alt="Logo PontoTel"
+            className="mb-4"
+            style={{ width: 300 }}
+          />
+          <h2>Olá Visitante</h2>
+          <p>Insira seus dados abaixo para acessar:</p>
+          <div className="nk-form mt-5">
+            <Form ref={formRef} onSubmit={handleSignin}>
+              <div className="input-group">
+                <span className="input-group-addon nk-ic-st-pro">
+                  <i className="fa fa-user"></i>
+                </span>
+                <div className="nk-int-st">
+                  <InputSignin
+                    type="text"
+                    name="email"
+                    placeholder="Seu e-mail"
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                data-ma-action="nk-login-switch"
-                data-ma-block="#l-register"
-                className="btn btn-login btn-success btn-float"
-              >
-                <i className="notika-icon notika-right-arrow right-arrow-ant"></i>
-              </button>
-            </div>
-          </Form>
-        </div>
+              <div className="input-group mg-t-15">
+                <span className="input-group-addon nk-ic-st-pro">
+                  <i className="fa fa-lock"></i>
+                </span>
+                <div className="nk-int-st">
+                  <InputSignin
+                    type="password"
+                    name="password"
+                    placeholder="Sua senha super secreta"
+                  />
+                </div>
 
-        <div className="nk-navigation nk-lg-ic">
-          <a
-            href="#!"
-            data-ma-action="nk-login-switch"
-            data-ma-block="#l-register"
-            style={{ backgroundColor: "#000" }}
-          >
-            <i className="fa fa-github"></i> <span>GitHub</span>
-          </a>
+                <button
+                  type="submit"
+                  data-ma-action="nk-login-switch"
+                  data-ma-block="#l-register"
+                  className="btn btn-login btn-success btn-float"
+                >
+                  <i className="notika-icon notika-right-arrow right-arrow-ant"></i>
+                </button>
+              </div>
+            </Form>
+          </div>
 
-          <a
-            href="#!"
-            data-ma-action="nk-login-switch"
-            data-ma-block="#l-register"
-            style={{ backgroundColor: "#DD4C38" }}
-          >
-            <i className="fa fa-google"></i> <span>Google</span>
-          </a>
+          <div className="nk-navigation nk-lg-ic">
+            <a
+              href="#!"
+              data-ma-action="nk-login-switch"
+              data-ma-block="#l-register"
+              style={{ backgroundColor: "#000" }}
+            >
+              <i className="fa fa-github"></i> <span>GitHub</span>
+            </a>
+
+            <a
+              href="#!"
+              data-ma-action="nk-login-switch"
+              data-ma-block="#l-register"
+              style={{ backgroundColor: "#DD4C38" }}
+            >
+              <i className="fa fa-google"></i> <span>Google</span>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

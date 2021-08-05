@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
-import { Cookies, useCookies } from "react-cookie";
+import { Cookies } from "react-cookie";
 import api from "../../services/api";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -41,29 +41,32 @@ const Users: React.FC = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   const [authorized, setAuthorized] = useState(true);
-  const [cookies, setCookies] = useCookies(["toast"]);
 
   useEffect(() => {
     const dataStorage = localStorage.getItem("@newmission:data");
     const username = JSON.parse(`${dataStorage}`);
     setUserName(username.user.name);
 
-    async function loadUsers(): Promise<void> {
-      const token = cookie.get("@newmission:access_token");
-      if (!token) {
-        setAuthorized(false);
-      }
-
-      const response = await api.get("/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setUsers(response.data);
+    const token = cookie.get("@newmission:access_token");
+    if (!token) {
+      setAuthorized(false);
     }
 
-    loadUsers()
+    async function loadUsers(): Promise<void> {
+      try {
+        const response = await api.get("/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUsers(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    loadUsers();
     loadToastInitial();
     redirectPage();
   }, [cookie, redirectPage]);

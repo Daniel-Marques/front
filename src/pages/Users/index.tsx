@@ -90,7 +90,7 @@ const Users: React.FC = () => {
   async function handleUpdateUser(
     user: Omit<IUser, "id" | "created_at" | "updated_at">
   ): Promise<void> {
-    console.log(user);
+
     try {
       const token = cookie.get("@newmission:access_token");
       const response = await api.put(
@@ -103,15 +103,17 @@ const Users: React.FC = () => {
         }
       );
 
-      setUsers(
-        users.map((mappedUser) =>
-          mappedUser.id === editingUser.id ? { ...response.data } : mappedUser
-        )
-      );
+      console.log(response.data);
 
-      toast(`👏🏼 Usuário atualizado com sucesso`, {
-        position: "top-right",
-      });
+      // setUsers(
+      //   users.map((mappedUser) =>
+      //     mappedUser.id === editingUser.id ? { ...response.data } : mappedUser
+      //   )
+      // );
+
+      // toast(`👏🏼 Usuário atualizado com sucesso`, {
+      //   position: "top-right",
+      // });
     } catch (error) {
       console.log(error);
     }

@@ -87,7 +87,7 @@ const ModalEditUser: React.FC<IModalProps> = ({
         await userEditSchema.validate(data, { abortEarly: false });
 
         handleUpdateUser({ ...data, document: doc5, pis: pis4, password: passwd });
-        setIsOpen();
+        // setIsOpen();
       } catch (err) {
         const validationErrors: Errors = {};
 

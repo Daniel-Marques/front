@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
+import { Cookies, useCookies } from "react-cookie";
 import api from "../../services/api";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Header from "../../components/Header";
 import Saudation from "../../components/Saudation";
@@ -8,7 +12,6 @@ import ModalAddUser from "../../components/ModalAddUser";
 import ModalEditUser from "../../components/ModalEditUser";
 import CardUser from "../../components/CardUser";
 import ButtonAddUser from "../../components/ButtonAddUser";
-import { Cookies } from "react-cookie";
 
 interface IUser {
   id: number;
@@ -38,35 +41,35 @@ const Users: React.FC = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   const [authorized, setAuthorized] = useState(true);
+  const [cookies, setCookies] = useCookies(["toast"]);
 
   useEffect(() => {
-    async function loadUsers(): Promise<void> {
-      const token = cookie.get("@newmission:access_token");
-      if (!token) {
-        setAuthorized(false);
-      }
+    loadToastInitial();
+    setInterval(() => {
+      loadUsers();
+    }, 4000)
+    redirectPage();
+  }, [loadUsers, redirectPage]);
 
-      try {
-        const token = cookie.get("@newmission:access_token");
-        const response = await api.get("/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setUsers(response.data);
-
-        const dataStorage = localStorage.getItem("@newmission:data");
-        const username = JSON.parse(`${dataStorage}`);
-        setUserName(username.user.name);
-      } catch (error) {
-        setAuthorized(false);
-      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  async function loadUsers() {
+    const token = cookie.get("@newmission:access_token");
+    if (!token) {
+      setAuthorized(false);
     }
 
-    loadUsers();
-    redirectPage();
-  }, [cookie, history, redirectPage]);
+    const response = await api.get("/users", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setUsers(response.data);
+
+    const dataStorage = localStorage.getItem("@newmission:data");
+    const username = JSON.parse(`${dataStorage}`);
+    setUserName(username.user.name);
+  }
 
   async function handleAddUser(
     user: Omit<IUser, "id" | "updated_at">
@@ -134,12 +137,31 @@ const Users: React.FC = () => {
   }
 
   function handleEditUser(user: IUser): void {
-    setEditingUser({...user, password: ''});
+    setEditingUser({ ...user, password: "" });
     toggleEditModal();
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  function loadToastInitial() {
+    const toastSessionStorage = sessionStorage.getItem("@newmission:toast");
+
+    if (!toastSessionStorage) {
+      const dataStorage = localStorage.getItem("@newmission:data");
+      const data = JSON.parse(`${dataStorage}`);
+
+      toast(`🎉 Seja Bem-vindo(a) ${data.user.name}`, {
+        position: "top-right",
+      });
+
+      /* Create cookie */
+      sessionStorage.setItem("@newmission:toast", "true");
+    }
   }
 
   return (
     <>
+      <ToastContainer />
+
       <Header />
 
       <div className="container">

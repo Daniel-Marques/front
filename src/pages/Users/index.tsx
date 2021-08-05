@@ -68,6 +68,7 @@ const Users: React.FC = () => {
     loadUsers();
     loadToastInitial();
     redirectPage();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleAddUser(

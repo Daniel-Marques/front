@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useHistory } from "react-router";
 import { Cookies } from "react-cookie";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
@@ -89,6 +91,7 @@ const Profile: React.FC = () => {
 
     loadData();
     redirectPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUpdateSubmit = useCallback(async (data: IEditProfileData) => {
@@ -116,10 +119,13 @@ const Profile: React.FC = () => {
       const user = JSON.parse(`${token}`);
       await api.put(`/users/${user.user.id}`, newData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${user.access_token}`,
         },
       });
-      console.log(newData);
+
+      toast(`🎉 Seu perfil foi atualizado com sucesso`, {
+        position: "top-right",
+      });
     } catch (err) {
       const validationErrors: Errors = {};
 
@@ -146,6 +152,8 @@ const Profile: React.FC = () => {
 
   return (
     <>
+      <ToastContainer />
+
       <Header />
 
       <div className="container">

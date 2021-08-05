@@ -134,7 +134,7 @@ const Users: React.FC = () => {
   }
 
   function handleEditUser(user: IUser): void {
-    setEditingUser(user);
+    setEditingUser({...user, password: ''});
     toggleEditModal();
   }
 

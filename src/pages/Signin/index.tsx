@@ -56,8 +56,7 @@ const Signin: React.FC = () => {
             let expires = new Date();
             expires.setTime(expires.getTime() + 12500 * 10);
             setCookies("@newmission:access_token", data.access_token, {
-              path: "/",
-              expires,
+              path: "/", expires
             });
 
             /* Redirect for router user */

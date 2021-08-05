@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useHistory } from "react-router";
 import { Cookies } from "react-cookie";
 import api from "../../services/api";
 
@@ -34,7 +35,9 @@ interface Errors {
 
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookies();
+  const history = useHistory();
 
   const [name, setName] = useState("");
   const [document, setDocument] = useState("");
@@ -48,67 +51,97 @@ const Profile: React.FC = () => {
   const [uf, setUf] = useState("");
   const [country, setCountry] = useState("");
 
-  useEffect(() => {
-    async function loadData() {
-      const token = localStorage.getItem("@newmission:data");
-      const user = JSON.parse(`${token}`);
+  const [authorized, setAuthorized] = useState(true);
 
-      const response = await api.get(`/users/${user.user.id}`);
-      setName(response.data.name);
-      setDocument(response.data.document);
-      setPis(response.data.pis);
-      setEmail(response.data.email);
-      setZipcode(response.data.zipcode);
-      setAddress(response.data.address);
-      setNumber(response.data.number);
-      setComplement(response.data.complement);
-      setCity(response.data.city);
-      setUf(response.data.state);
-      setCountry(response.data.country);
+  useEffect(() => {
+    const token = cookie.get("@newmission:access_token");
+    if (!token) {
+      setAuthorized(false);
+    }
+
+    async function loadData(): Promise<void> {
+      try {
+        const tokenCookie = cookie.get("@newmission:access_token");
+        const dataUser = localStorage.getItem("@newmission:data");
+        const user = JSON.parse(`${dataUser}`);
+
+        const response = await api.get(`/users/${user.user.id}`, {
+          headers: {
+            Authorization: `Bearer ${tokenCookie}`,
+          },
+        });
+
+        setName(response.data.name);
+        setDocument(response.data.document);
+        setPis(response.data.pis);
+        setEmail(response.data.email);
+        setZipcode(response.data.zipcode);
+        setAddress(response.data.address);
+        setNumber(response.data.number);
+        setComplement(response.data.complement);
+        setCity(response.data.city);
+        setUf(response.data.state);
+        setCountry(response.data.country);
+      } catch (error) {
+        setAuthorized(false);
+      }
     }
 
     loadData();
-  }, [cookie]);
+    redirectPage();
+  }, [cookie, history, redirectPage]);
 
-  const handleUpdateSubmit = useCallback(
-    async (data: IEditProfileData) => {
-      try {
-        // Replaced CPF
-        const doc1 = data.document;
-        const doc2 = doc1.replace(".", "");
-        const doc3 = doc2.replace(".", "");
-        const doc4 = doc3.replace(".", "");
-        const doc5 = doc4.replace("-", "");
+  const handleUpdateSubmit = useCallback(async (data: IEditProfileData) => {
+    try {
+      // Replaced CPF
+      const doc1 = data.document;
+      const doc2 = doc1.replace(".", "");
+      const doc3 = doc2.replace(".", "");
+      const doc4 = doc3.replace(".", "");
+      const doc5 = doc4.replace("-", "");
 
-        // Replaced PIS
-        const pis1 = data.pis;
-        const pis2 = pis1.replace(".", "");
-        const pis3 = pis2.replace(".", "");
-        const pis4 = pis3.replace("-", "");
+      // Replaced PIS
+      const pis1 = data.pis;
+      const pis2 = pis1.replace(".", "");
+      const pis3 = pis2.replace(".", "");
+      const pis4 = pis3.replace("-", "");
 
-        // Remove all previous errors
-        formRef.current?.setErrors({});
-        await userEditSchema.validate(data, { abortEarly: false });
+      // Remove all previous errors
+      formRef.current?.setErrors({});
+      await userEditSchema.validate(data, { abortEarly: false });
 
-        const newData = { ...data, document: doc5, pis: pis4 };
+      const newData = { ...data, document: doc5, pis: pis4 };
 
-        const token = localStorage.getItem("@newmission:data");
-        const user = JSON.parse(`${token}`);
-        await api.put(`/users/${user.user.id}`, newData);
-      } catch (err) {
-        const validationErrors: Errors = {};
+      const token = localStorage.getItem("@newmission:data");
+      const user = JSON.parse(`${token}`);
+      await api.put(`/users/${user.user.id}`, newData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (err) {
+      const validationErrors: Errors = {};
 
-        if (err instanceof yup.ValidationError) {
-          err.inner.forEach((error) => {
-            validationErrors[error.path!] = error.message;
-          });
+      if (err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          validationErrors[error.path!] = error.message;
+        });
 
-          formRef.current?.setErrors(validationErrors);
-        }
+        formRef.current?.setErrors(validationErrors);
       }
-    },
-    [cookie]
-  );
+    }
+  }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  async function redirectPage() {
+    if (authorized) {
+      return;
+    } else {
+      localStorage.removeItem("@newmission:data");
+      cookie.remove("@newmission:access_token");
+      history.replace("/");
+    }
+  }
 
   return (
     <>
@@ -158,7 +191,6 @@ const Profile: React.FC = () => {
                       <label>Email</label>
                       <Input
                         name="email"
-                        type="email"
                         placeholder="Informe aqui o E-mail"
                         required
                         defaultValue={email}

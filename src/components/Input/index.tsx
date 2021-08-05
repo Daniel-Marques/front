@@ -26,12 +26,17 @@ const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
   return (
     <Container>
       <input
+
         className="form-control"
         defaultValue={defaultValue}
         ref={inputRef}
         {...rest}
       />
-      {error && <div className="text-danger" style={{marginTop: 2}}>{error}</div>}
+      {error && (
+        <div className="text-danger" style={{ marginTop: 2 }}>
+          {error}
+        </div>
+      )}
     </Container>
   );
 };

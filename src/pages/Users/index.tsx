@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import api from "../../services/api";
 
 import Header from "../../components/Header";
@@ -7,6 +8,7 @@ import ModalAddUser from "../../components/ModalAddUser";
 import ModalEditUser from "../../components/ModalEditUser";
 import CardUser from "../../components/CardUser";
 import ButtonAddUser from "../../components/ButtonAddUser";
+import { Cookies } from "react-cookie";
 
 interface IUser {
   id: number;
@@ -25,24 +27,46 @@ interface IUser {
 }
 
 const Users: React.FC = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const cookie = new Cookies();
+  const history = useHistory();
+
   const [username, setUserName] = useState("");
   const [users, setUsers] = useState<IUser[]>([]);
   const [editingUser, setEditingUser] = useState<IUser>({} as IUser);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
+  const [authorized, setAuthorized] = useState(true);
+
   useEffect(() => {
     async function loadUsers(): Promise<void> {
-      const response = await api.get("/users");
-      setUsers(response.data);
+      const token = cookie.get("@newmission:access_token");
+      if (!token) {
+        setAuthorized(false);
+      }
 
-      const token = localStorage.getItem("@newmission:data");
-      const username = JSON.parse(`${token}`);
-      setUserName(username.user.name);
+      try {
+        const token = cookie.get("@newmission:access_token");
+        const response = await api.get("/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUsers(response.data);
+
+        const dataStorage = localStorage.getItem("@newmission:data");
+        const username = JSON.parse(`${dataStorage}`);
+        setUserName(username.user.name);
+      } catch (error) {
+        setAuthorized(false);
+      }
     }
 
     loadUsers();
-  }, []);
+    redirectPage();
+  }, [cookie, history, redirectPage]);
 
   async function handleAddUser(
     user: Omit<IUser, "id" | "updated_at">
@@ -55,11 +79,27 @@ const Users: React.FC = () => {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  async function redirectPage() {
+    if (authorized) {
+      return;
+    } else {
+      localStorage.removeItem("@newmission:data");
+      cookie.remove("@newmission:access_token");
+      history.replace("/");
+    }
+  }
+
   async function handleUpdateUser(
     user: Omit<IUser, "id" | "created_at" | "updated_at">
   ): Promise<void> {
     try {
-      const response = await api.put(`/users/${editingUser.id}`, user);
+      const token = cookie.get("@newmission:access_token");
+      const response = await api.put(`/users/${editingUser.id}`, user, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setUsers(
         users.map((mappedUser) =>
@@ -73,7 +113,12 @@ const Users: React.FC = () => {
 
   async function handleDeleteUser(id: number): Promise<void> {
     try {
-      await api.delete(`/users/${id}`);
+      const token = cookie.get("@newmission:access_token");
+      await api.delete(`/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(users.filter((user) => user.id !== id));
     } catch (error) {
       console.log(error);

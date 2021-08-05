@@ -19,7 +19,9 @@ interface ILogin {
 }
 
 const Signin: React.FC = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookies();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookies] = useCookies(["access_token"]);
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
@@ -34,7 +36,7 @@ const Signin: React.FC = () => {
         history.push("/users");
       }, 1200);
     }
-  }, [cookie]);
+  }, [cookie, history]);
 
   const handleSignin = useCallback(
     async (data: ILogin) => {
@@ -56,7 +58,8 @@ const Signin: React.FC = () => {
             let expires = new Date();
             expires.setTime(expires.getTime() + 12500 * 10);
             setCookies("@newmission:access_token", data.access_token, {
-              path: "/", expires
+              path: "/",
+              expires,
             });
 
             /* Redirect for router user */

@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   function handleLogout() {
     localStorage.removeItem("@newmission:data");
     cookie.remove("@newmission:access_token");
-    history.push("/");
+    history.replace("/");
   }
 
   return (

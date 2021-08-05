@@ -6,7 +6,7 @@ interface IUserProps {
   document: string;
   pis: string;
   email: string;
-  password: string;
+  password: string | null ;
   zipcode: number;
   address: string;
   number: string;

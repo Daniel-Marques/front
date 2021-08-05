@@ -19,7 +19,7 @@ interface IUser {
   document: string;
   pis: string;
   email: string;
-  password: string;
+  password: string | null;
   zipcode: number;
   address: string;
   number: string;
@@ -68,7 +68,7 @@ const Users: React.FC = () => {
     loadUsers();
     loadToastInitial();
     redirectPage();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleAddUser(
@@ -90,13 +90,18 @@ const Users: React.FC = () => {
   async function handleUpdateUser(
     user: Omit<IUser, "id" | "created_at" | "updated_at">
   ): Promise<void> {
+    console.log(user);
     try {
       const token = cookie.get("@newmission:access_token");
-      const response = await api.put(`/users/${editingUser.id}`, user, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.put(
+        `/users/${editingUser.id}`,
+        { ...user, id: editingUser.id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setUsers(
         users.map((mappedUser) =>
@@ -139,7 +144,7 @@ const Users: React.FC = () => {
   }
 
   function handleEditUser(user: IUser): void {
-    setEditingUser({ ...user, password: "" });
+    setEditingUser(user);
     toggleEditModal();
   }
 

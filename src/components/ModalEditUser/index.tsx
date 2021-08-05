@@ -16,7 +16,7 @@ interface IUser {
   document: string;
   pis: string;
   email: string;
-  password: string;
+  password: string | null;
   zipcode: number;
   address: string;
   number: string;
@@ -40,7 +40,7 @@ interface IEditUserData {
   document: string;
   pis: string;
   email: string;
-  password: string;
+  password: string | null;
   zipcode: number;
   address: string;
   number: string;
@@ -78,11 +78,15 @@ const ModalEditUser: React.FC<IModalProps> = ({
         const pis3 = pis2.replace(".", "");
         const pis4 = pis3.replace("-", "");
 
+        // Password processing
+        let passwd = null;
+        data.password === "" ? (passwd = null) : (passwd = data.password);
+
         // Remove all previous errors
         formRef.current?.setErrors({});
         await userEditSchema.validate(data, { abortEarly: false });
 
-        handleUpdateUser({ ...data, document: doc5, pis: pis4 });
+        handleUpdateUser({ ...data, document: doc5, pis: pis4, password: passwd });
         setIsOpen();
       } catch (err) {
         const validationErrors: Errors = {};
@@ -142,6 +146,7 @@ const ModalEditUser: React.FC<IModalProps> = ({
               name="password"
               type="password"
               placeholder="Informe aqui a senha"
+              defaultValue=""
             />
           </div>
 

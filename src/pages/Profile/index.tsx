@@ -109,11 +109,15 @@ const Profile: React.FC = () => {
       const pis3 = pis2.replace(".", "");
       const pis4 = pis3.replace("-", "");
 
+      // Password processing
+      let passwd = null;
+      data.password === "" ? (passwd = null) : (passwd = data.password);
+
       // Remove all previous errors
       formRef.current?.setErrors({});
       await userEditSchema.validate(data, { abortEarly: false });
 
-      const newData = { ...data, document: doc5, pis: pis4 };
+      const newData = { ...data, document: doc5, pis: pis4, password: passwd };
 
       const token = localStorage.getItem("@newmission:data");
       const user = JSON.parse(`${token}`);

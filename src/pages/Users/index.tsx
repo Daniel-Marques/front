@@ -73,21 +73,16 @@ const Users: React.FC = () => {
   async function handleAddUser(
     user: Omit<IUser, "id" | "updated_at">
   ): Promise<void> {
+    const token = cookie.get("@newmission:access_token");
     try {
-      const response = await api.post("users", user);
+      const response = await api.post("users", user, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers([...users, response.data]);
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  async function redirectPage() {
-    if (authorized) {
-      return;
-    } else {
-      localStorage.removeItem("@newmission:data");
-      cookie.remove("@newmission:access_token");
-      history.replace("/");
     }
   }
 
@@ -107,6 +102,10 @@ const Users: React.FC = () => {
           mappedUser.id === editingUser.id ? { ...response.data } : mappedUser
         )
       );
+
+      toast(`👏🏼 Usuário atualizado com sucesso`, {
+        position: "top-right",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -121,6 +120,10 @@ const Users: React.FC = () => {
         },
       });
       setUsers(users.filter((user) => user.id !== id));
+
+      toast(`👏🏼 Usuário deletado com sucesso`, {
+        position: "top-right",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -137,6 +140,16 @@ const Users: React.FC = () => {
   function handleEditUser(user: IUser): void {
     setEditingUser({ ...user, password: "" });
     toggleEditModal();
+  }
+
+  async function redirectPage() {
+    if (authorized) {
+      return;
+    } else {
+      localStorage.removeItem("@newmission:data");
+      cookie.remove("@newmission:access_token");
+      history.replace("/");
+    }
   }
 
   function loadToastInitial() {

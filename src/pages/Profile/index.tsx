@@ -119,6 +119,7 @@ const Profile: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(newData);
     } catch (err) {
       const validationErrors: Errors = {};
 

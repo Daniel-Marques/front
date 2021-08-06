@@ -47,7 +47,7 @@ const Header: React.FC = () => {
                       </span>
                     </a>
                   </li>
-                  <li className="nav-item">
+                  <li className="nav-item" style={{marginLeft: 10}}>
                     <Link
                       onClick={handleLogout}
                       className="nav-link"

@@ -119,13 +119,29 @@ const Profile: React.FC = () => {
 
       const newData = { ...data, document: doc5, pis: pis4, password: passwd };
 
-      const token = localStorage.getItem("@newmission:data");
-      const user = JSON.parse(`${token}`);
-      await api.put(`/users/${user.user.id}`, newData, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      });
+      const dataStorage = localStorage.getItem("@newmission:data");
+      const dataParse = JSON.parse(`${dataStorage}`);
+      await api
+        .put(`/users/${dataParse.user.id}`, newData, {
+          headers: {
+            Authorization: `Bearer ${dataParse.access_token}`,
+          },
+        })
+        .then((result) => {
+          const dataStore = {
+            user: {
+              id: dataParse.user.id,
+              name: result.data.name,
+              email: result.data.email,
+            },
+            access_token: dataParse.access_token,
+          };
+
+          console.log(dataStore);
+
+          localStorage.removeItem("@newmission:data");
+          localStorage.setItem("@newmission:data", JSON.stringify(dataStore));
+        });
 
       toast(`🎉 Seu perfil foi atualizado com sucesso`, {
         position: "top-right",

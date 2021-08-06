@@ -47,13 +47,15 @@ const Users: React.FC = () => {
     setUserName(username.user.name);
 
     async function loadUsers(): Promise<void> {
+      const dataStorage = localStorage.getItem("@newmission:data");
+      const data = JSON.parse(`${dataStorage}`)
       const token = cookie.get("@newmission:access_token");
       if (!token) {
         setAuthorized(false);
       }
 
       try {
-        const response = await api.get("/users", {
+        const response = await api.get(`/users/${data.user.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

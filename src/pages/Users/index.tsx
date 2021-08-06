@@ -12,6 +12,7 @@ import ModalAddUser from "../../components/ModalAddUser";
 import ModalEditUser from "../../components/ModalEditUser";
 import CardUser from "../../components/CardUser";
 import ButtonAddUser from "../../components/ButtonAddUser";
+import Loader from "../../components/Loader";
 
 interface IUser {
   id: number;
@@ -38,6 +39,7 @@ const Users: React.FC = () => {
   const [editingUser, setEditingUser] = useState<IUser>({} as IUser);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [authorized, setAuthorized] = useState(true);
 
@@ -55,16 +57,14 @@ const Users: React.FC = () => {
       }
 
       try {
-        const response = await api.get(
-          `/users/withoutCurrentUser/${data.user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setUsers(response.data);
+        await api
+          .get(`/users/withoutCurrentUser/${data.user.id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+          .then((response) => {
+            setUsers(response.data);
+            setLoading(false);
+          });
       } catch (error) {
         console.log(error);
       }
@@ -242,6 +242,8 @@ const Users: React.FC = () => {
             <ButtonAddUser openModal={toggleModal} />
           </div>
         </div>
+
+        {loading && <Loader />}
 
         <div className="row mt-3" data-testid="user-list">
           {users &&

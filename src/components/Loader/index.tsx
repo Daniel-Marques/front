@@ -10,6 +10,7 @@ const Loader: React.FC = () => {
         // display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        marginTop: 50
       }}
     >
       <img src="./assets/images/loading.gif" alt="" width="50" style={{marginBottom: 10}}/>

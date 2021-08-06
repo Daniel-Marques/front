@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useHistory } from "react-router";
 import { Cookies } from "react-cookie";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../services/api";
 
@@ -121,6 +121,7 @@ const Profile: React.FC = () => {
 
       const dataStorage = localStorage.getItem("@newmission:data");
       const dataParse = JSON.parse(`${dataStorage}`);
+
       await api
         .put(`/users/${dataParse.user.id}`, newData, {
           headers: {
@@ -137,8 +138,7 @@ const Profile: React.FC = () => {
             access_token: dataParse.access_token,
           };
 
-          console.log(dataStore);
-
+          // Delete localStorage current
           localStorage.removeItem("@newmission:data");
           localStorage.setItem("@newmission:data", JSON.stringify(dataStore));
         });
@@ -159,6 +159,45 @@ const Profile: React.FC = () => {
     }
   }, []);
 
+  async function handleDeleteUser(): Promise<void> {
+    const token = cookie.get("@newmission:access_token");
+    const dataStorage = localStorage.getItem("@newmission:data");
+    const data = JSON.parse(`${dataStorage}`);
+
+    if (data.user.id === 2) {
+      toast.warn(`🖐🏻 Você não pode ser excluído`, {
+        position: "top-right",
+      });
+    } else {
+      try {
+        await api
+          .delete(`/users/${data.user.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            localStorage.removeItem("@newmission:data");
+            sessionStorage.removeItem("@newmission:toast");
+            cookie.remove("@newmission:access_token");
+
+            toast.info(
+              `👋🏼 Bye Bye! Desculpa está forçando, mas vou te deslogaaar...`,
+              {
+                position: "top-right",
+              }
+            );
+
+            setTimeout(() => {
+              history.replace("/");
+            }, 5000);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   async function redirectPage() {
     if (authorized) {
       return;
@@ -172,7 +211,7 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer transition={Flip}/>
 
       <Header />
 
@@ -300,18 +339,41 @@ const Profile: React.FC = () => {
                       />
                     </div>
 
-                    <div className="col-12">
-                      <button
-                        type="submit"
-                        className="btn btn-labeled btn-primary"
-                        data-testid="edit-profile-button"
-                        style={{ marginLeft: 12, borderRadius: 3, height: 40 }}
-                      >
-                        <span className="btn-label" style={{ height: 40 }}>
-                          <i className="fa fa-check"></i>
-                        </span>
-                        Editar usuário
-                      </button>
+                    <div className="col-lg-12" style={{ paddingLeft: 0 }}>
+                      <div style={{ display: "flex" }}>
+                        <button
+                          type="submit"
+                          className="btn btn-labeled btn-primary"
+                          data-testid="edit-profile-button"
+                          style={{
+                            marginLeft: 12,
+                            borderRadius: 3,
+                            height: 40,
+                          }}
+                        >
+                          <span className="btn-label" style={{ height: 40 }}>
+                            <i className="fa fa-check"></i>
+                          </span>
+                          Editar usuário
+                        </button>
+
+                        <button
+                          onClick={handleDeleteUser}
+                          type="button"
+                          className="btn btn-labeled btn-danger"
+                          data-testid="edit-profile-button"
+                          style={{
+                            marginLeft: 12,
+                            borderRadius: 3,
+                            height: 40,
+                          }}
+                        >
+                          <span className="btn-label" style={{ height: 40 }}>
+                            <i className="fa fa-trash"></i>
+                          </span>
+                          Excluir meu perfil
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Form>

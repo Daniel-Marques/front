@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { Cookies } from "react-cookie";
 import api from "../../services/api";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Header from "../../components/Header";
@@ -48,18 +48,21 @@ const Users: React.FC = () => {
 
     async function loadUsers(): Promise<void> {
       const dataStorage = localStorage.getItem("@newmission:data");
-      const data = JSON.parse(`${dataStorage}`)
+      const data = JSON.parse(`${dataStorage}`);
       const token = cookie.get("@newmission:access_token");
       if (!token) {
         setAuthorized(false);
       }
 
       try {
-        const response = await api.get(`/users/withoutCurrentUser/${data.user.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get(
+          `/users/withoutCurrentUser/${data.user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         setUsers(response.data);
       } catch (error) {
@@ -140,9 +143,12 @@ const Users: React.FC = () => {
             sessionStorage.removeItem("@newmission:toast");
             cookie.remove("@newmission:access_token");
 
-            toast.info(`👋🏼 Bye Bye! Desculpa está forçando, mas vou te deslogaaar...`, {
-              position: "top-right",
-            });
+            toast.info(
+              `👋🏼 Bye Bye! Desculpa está forçando, mas vou te deslogaaar...`,
+              {
+                position: "top-right",
+              }
+            );
 
             setTimeout(() => {
               history.replace("/");
@@ -211,7 +217,7 @@ const Users: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer transition={Flip} />
 
       <Header />
 

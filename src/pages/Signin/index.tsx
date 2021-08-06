@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { useCookies, Cookies } from "react-cookie";
 import {} from "react-toast-notifications";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import api from "../../services/api";
@@ -95,7 +95,8 @@ const Signin: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer transition={Flip}/>
+
       <div className="login-content">
         <div
           className="nk-block toggled"

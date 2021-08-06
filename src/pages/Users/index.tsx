@@ -117,20 +117,26 @@ const Users: React.FC = () => {
   }
 
   async function handleDeleteUser(id: number): Promise<void> {
-    try {
-      const token = cookie.get("@newmission:access_token");
-      await api.delete(`/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUsers(users.filter((user) => user.id !== id));
-
-      toast(`👏🏼 Usuário deletado com sucesso`, {
+    if (id === 2) {
+      toast.warn(`🖐🏻 Não é permitido deletar esse usuário`, {
         position: "top-right",
       });
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        const token = cookie.get("@newmission:access_token");
+        await api.delete(`/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(users.filter((user) => user.id !== id));
+
+        toast(`👏🏼 Usuário deletado com sucesso`, {
+          position: "top-right",
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 

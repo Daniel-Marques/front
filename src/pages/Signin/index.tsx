@@ -1,7 +1,7 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useCookies, Cookies } from "react-cookie";
-import {} from "react-toast-notifications";
+import LoadingScreen from "react-loading-screen";
 
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +28,7 @@ const Signin: React.FC = () => {
   const cookie = new Cookies();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
@@ -69,8 +70,13 @@ const Signin: React.FC = () => {
                 expires,
               });
 
-              /* Redirect for router user */
-              history.push("/users");
+              setLoading(true);
+
+              setTimeout(() => {
+                /* Redirect for router user */
+                history.push("/users");
+                setLoading(false);
+              }, 5000);
             }
           })
           .catch((err) => {
@@ -95,8 +101,16 @@ const Signin: React.FC = () => {
 
   return (
     <>
-      <ToastContainer transition={Flip}/>
+      <LoadingScreen
+        loading={loading}
+        bgColor="#41bac7"
+        spinnerColor="#9ee5f8"
+        textColor="#FFFFFF"
+        logoSrc="./assets/img/logo_pontotel.png"
+        text="Estou te redirecionando..."
+      />
 
+      <ToastContainer transition={Flip} />
       <div className="login-content">
         <div
           className="nk-block toggled"

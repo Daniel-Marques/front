@@ -55,7 +55,7 @@ const Users: React.FC = () => {
       }
 
       try {
-        const response = await api.get(`/users/${data.user.id}`, {
+        const response = await api.get(`/users/withoutCurrentUser/${data.user.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

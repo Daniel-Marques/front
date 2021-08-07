@@ -106,7 +106,7 @@ const Signin: React.FC = () => {
         bgColor="#41bac7"
         spinnerColor="#9ee5f8"
         textColor="#FFFFFF"
-        logoSrc="./assets/img/logo_pontotel.png"
+        logoSrc="./assets/img/logo.png"
         text="Estou te redirecionando..."
       />
 
@@ -118,8 +118,8 @@ const Signin: React.FC = () => {
           style={{ minHeight: "80vh" }}
         >
           <img
-            src="./assets/img/logo_pontotel.png"
-            alt="Logo PontoTel"
+            src="./assets/img/logo.png"
+            alt="Logo"
             className="mb-4"
             style={{ width: 300 }}
           />

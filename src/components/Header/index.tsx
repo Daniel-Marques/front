@@ -25,8 +25,8 @@ const Header: React.FC = () => {
               <div className="logo-area">
                 <a href="/users">
                   <img
-                    src="./assets/img/logo_pontotel.png"
-                    alt="Logo PontoTel"
+                    src="./assets/img/logo.png"
+                    alt="Logo"
                     style={{ width: 115 }}
                   />
                 </a>

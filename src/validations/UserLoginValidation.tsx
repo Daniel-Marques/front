@@ -18,3 +18,20 @@ export const userLoginSchema = yup.object().shape({
     }),
   password: yup.string().required("O campo é obrigatório"),
 });
+
+
+export const userSignupSchema = yup.object().shape({
+  name: yup.string().required("O campo é obrigatório"),
+  email: yup
+    .string()
+    .email("Informe um e-mail válido")
+    .required("O campo é obrigatório")
+    .test("is-email", "E-mail inválido", async function (value) {
+      const { email } = this.parent;
+      if (validateEmail(email) === false) {
+        return false;
+      }
+      return true;
+    }),
+  password: yup.string().required("O campo é obrigatório"),
+});

@@ -13,12 +13,14 @@ import InputSignin from "../../components/InputSignin";
 
 import { Form } from "./styles";
 import * as yup from "yup";
-import { userLoginSchema } from "../../validations/UserLoginValidation";
+import { userSignupSchema } from "../../validations/UserLoginValidation";
 
 interface Errors {
   [key: string]: string;
 }
-interface ILogin {
+
+interface ISignup {
+  name: String;
   email: String;
   password: String;
 }
@@ -44,63 +46,56 @@ const Signin: React.FC = () => {
     }
   }, [cookie, history]);
 
-  const handleSignin = useCallback(
-    async (data: ILogin) => {
-      try {
-        /* Remove all previous errors */
-        formRef.current?.setErrors({});
-        /* Perform as appropriate validations */
-        await userLoginSchema.validate(data, { abortEarly: false });
+  const handleSignup = useCallback(async (data: ISignup) => {
+    try {
+      /* Remove all previous errors */
+      formRef.current?.setErrors({});
+      /* Perform as appropriate validations */
+      await userSignupSchema.validate(data, { abortEarly: false });
 
-        /* Validation passed */
-        await api
-          .post("/auth/token", data)
-          .then((response) => {
-            const { data } = response;
+      /* Validation passed */
+      await api
+        .post("/auth/signup", data)
+        .then((response) => {
+          const { data } = response;
 
-            if (data) {
-              /* Create localStorage */
-              localStorage.setItem("@newmission:data", JSON.stringify(data));
+          if (data) {
+            /* Create localStorage */
+            localStorage.setItem("@newmission:data", JSON.stringify(data));
 
-              /* Create cookie */
-              let expires = new Date();
-              expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
-              setCookies("@newmission:access_token", data.access_token, {
-                path: "/",
-                expires,
-              });
-
-              setLoading(true);
-
-              setTimeout(() => {
-                /* Redirect for router user */
-                history.push("/users");
-                setLoading(false);
-              }, 5000);
-            }
-          })
-          .catch((err) => {
-            toast(`Ooops! ${err.response.data['detail']}`, {
-              position: "top-right",
+            /* Create cookie */
+            let expires = new Date();
+            expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+            setCookies("@newmission:access_token", data.access_token, {
+              path: "/",
+              expires,
             });
-          });
-      } catch (err) {
-        const validationErrors: Errors = {};
 
-        if (err instanceof yup.ValidationError) {
-          err.inner.forEach((error) => {
-            validationErrors[error.path!] = error.message;
-          });
+            setLoading(true);
 
-          formRef.current?.setErrors(validationErrors);
-        }
+            setTimeout(() => {
+              /* Redirect for router user */
+              history.push("/users");
+              setLoading(false);
+            }, 5000);
+          }
+        })
+        .catch((err) => {
+          toast(`Ooops! ${err.response.data['detail']}`, {
+            position: "top-right",
+          });
+        });
+    } catch (err) {
+      const validationErrors: Errors = {};
+
+      if (err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          validationErrors[error.path!] = error.message;
+        });
+
+        formRef.current?.setErrors(validationErrors);
       }
-    },
-    [history, setCookies]
-  );
-
-  const handleSignup = useCallback(async (data) => {
-    console.log(data);
+    }
   }, []);
 
   return (
@@ -117,24 +112,28 @@ const Signin: React.FC = () => {
       <ToastContainer transition={Flip} />
 
       <div className="login-content">
-        <div
-          className="nk-block toggled"
-          id="l-login"
-          style={{ minHeight: "80vh" }}
-        >
+        <div className="nk-block toggled" id="l-register">
           <img
             src="./assets/img/logo.png"
             alt="Logo"
             className="mb-4"
             style={{ width: 300 }}
           />
-          <h2>Olá Visitante</h2>
-          <p>Insira seus dados abaixo para acessar:</p>
-          <div className="nk-form">
-            <Form ref={formRef} onSubmit={handleSignin}>
+          <h4>Insira seus dados abaixo para se cadastrar:</h4>
+          <div className="nk-form mt-3">
+            <Form ref={formRef} onSubmit={handleSignup}>
               <div className="input-group">
                 <span className="input-group-addon nk-ic-st-pro">
                   <i className="fa fa-user"></i>
+                </span>
+                <div className="nk-int-st">
+                  <InputSignin type="text" name="name" placeholder="Seu nome" />
+                </div>
+              </div>
+
+              <div className="input-group mg-t-15">
+                <span className="input-group-addon nk-ic-st-pro">
+                  <i className="fa fa-envelope"></i>
                 </span>
                 <div className="nk-int-st">
                   <InputSignin
@@ -160,25 +159,20 @@ const Signin: React.FC = () => {
                 <button
                   type="submit"
                   className="btn btn-login btn-success btn-float"
+                  style={{ marginTop: 15 }}
                 >
                   <i className="notika-icon notika-right-arrow right-arrow-ant"></i>
                 </button>
               </div>
             </Form>
           </div>
-
           <div
-            className="nk-navigation nk-lg-ic"
+            className="nk-navigation rg-ic-stl"
             style={{ display: "flex", justifyContent: "center" }}
           >
-            <a
-              href="/signup"
-              data-ma-block="#l-register"
-              className="registerHover"
-              style={{ marginRight: 5 }}
-            >
-              <i className="notika-icon notika-plus-symbol"></i>
-              <span>Criar conta</span>
+            <a href="/" data-ma-block="#l-login" style={{ marginRight: 5 }}>
+              <i className="notika-icon notika-left-arrow"></i>
+              <span>Login</span>
             </a>
 
             <a

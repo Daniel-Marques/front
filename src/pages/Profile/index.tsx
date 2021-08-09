@@ -52,6 +52,7 @@ const Profile: React.FC = () => {
   const [city, setCity] = useState("");
   const [uf, setUf] = useState("");
   const [country, setCountry] = useState("");
+  const [userId, setUserId] = useState(1);
 
   const [authorized, setAuthorized] = useState(true);
 
@@ -84,6 +85,7 @@ const Profile: React.FC = () => {
         setCity(response.data.city);
         setUf(response.data.state);
         setCountry(response.data.country);
+        setUserId(response.data.id);
       } catch (error) {
         setAuthorized(false);
       }
@@ -159,44 +161,37 @@ const Profile: React.FC = () => {
     }
   }, []);
 
-  async function handleDeleteUser(): Promise<void> {
-    const token = cookie.get("@newmission:access_token");
-    const dataStorage = localStorage.getItem("@newmission:data");
-    const data = JSON.parse(`${dataStorage}`);
+  const handleDeleteUser = useCallback(async (id: number) => {
+    try {
+      const token = cookie.get("@newmission:access_token");
 
-    if (data.user.id === 2) {
-      toast.warn(`🖐🏻 Você não pode ser excluído`, {
-        position: "top-right",
-      });
-    } else {
-      try {
-        await api
-          .delete(`/users/${data.user.id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(() => {
-            localStorage.removeItem("@newmission:data");
-            sessionStorage.removeItem("@newmission:toast");
-            cookie.remove("@newmission:access_token");
+      await api
+        .delete(`/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          localStorage.removeItem("@newmission:data");
+          sessionStorage.removeItem("@newmission:toast");
+          cookie.remove("@newmission:access_token");
 
-            toast.info(
-              `👋🏼 Bye Bye! Desculpa está forçando, mas vou te deslogaaar...`,
-              {
-                position: "top-right",
-              }
-            );
+          toast.info(
+            `👋🏼 Bye Bye! Desculpa está forçando, mas vou te deslogaaar...`,
+            {
+              position: "top-right",
+            }
+          );
 
-            setTimeout(() => {
-              history.replace("/");
-            }, 5000);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+          setTimeout(() => {
+            history.replace("/");
+          }, 5000);
+        });
+    } catch (error) {
+      console.log(error);
     }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function redirectPage() {
     if (authorized) {
@@ -211,7 +206,7 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <ToastContainer transition={Flip}/>
+      <ToastContainer transition={Flip} />
 
       <Header />
 
@@ -358,10 +353,10 @@ const Profile: React.FC = () => {
                         </button>
 
                         <button
-                          onClick={handleDeleteUser}
+                          onClick={() => handleDeleteUser(userId)}
                           type="button"
                           className="btn btn-labeled btn-danger"
-                          data-testid="edit-profile-button"
+                          data-testid="remove-profile-button"
                           style={{
                             marginLeft: 12,
                             borderRadius: 3,

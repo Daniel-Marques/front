@@ -54,7 +54,7 @@ const CardUser: React.FC<IProps> = ({
             type="button"
             className="btn btn-danger"
             onClick={() => handleDelete(user.id)}
-            data-testid={`remove-user-${user.id}`}
+            data-testid={`remove-user-${user.document}`}
             style={{ marginRight: 5 }}
           >
             <i className="fa fa-trash"></i>
@@ -64,7 +64,7 @@ const CardUser: React.FC<IProps> = ({
             type="button"
             className="btn btn-primary"
             onClick={() => setEditingUser()}
-            data-testid={`edit-user-${user.id}`}
+            data-testid={`edit-user-${user.document}`}
           >
             <i className="fa fa-pencil"></i>
           </button>

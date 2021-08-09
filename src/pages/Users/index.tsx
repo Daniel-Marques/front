@@ -57,14 +57,15 @@ const Users: React.FC = () => {
       }
 
       try {
-        await api
-          .get(`/users/withoutCurrentUser/${data.user.id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          .then((response) => {
-            setUsers(response.data);
-            setLoading(false);
-          });
+        const response = await api.get(
+          `/users/withoutCurrentUser/${data.user.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setUsers(response.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -77,15 +78,21 @@ const Users: React.FC = () => {
   }, []);
 
   async function handleAddUser(
-    user: Omit<IUser, "id" | "updated_at">
+    user: Omit<IUser, "id" | "created_at" | "updated_at">
   ): Promise<void> {
     const token = cookie.get("@newmission:access_token");
+
     try {
       const response = await api.post("users", user, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      toast(`👏🏼 Usuário criado com sucesso`, {
+        position: "top-right",
+      });
+
       setUsers([...users, response.data]);
     } catch (error) {
       console.log(error);
@@ -249,7 +256,7 @@ const Users: React.FC = () => {
           {users &&
             users.map((user) => (
               <CardUser
-                key={`userId${user.id}`}
+                key={`user-${user.document}`}
                 user={user}
                 handleDelete={handleDeleteUser}
                 handleEditUser={handleEditUser}

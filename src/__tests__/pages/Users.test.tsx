@@ -19,27 +19,34 @@ const mockSessionStorage = {
 
 describe("Users", () => {
   it("should be able to list all the users from your api", async () => {
-    localStorage.setItem("@newmission:data", JSON.stringify(mockSessionStorage));
+    localStorage.setItem(
+      "@newmission:data",
+      JSON.stringify(mockSessionStorage)
+    );
 
-    apiMock.onGet("users").reply(200, [
-      {
-        id: 1,
-        name: "Daniel da Silva Marques",
-        pis: "13319226648",
-        document: "06408268307",
-        password: "12345678",
-        address: "Rua Maria das Graças da Silva",
-        complement: "Casa",
-        state: "CE",
-        email: "daniel.silva.city@gmail.com",
-        zipcode: 62900000,
-        number: 222,
-        city: "Russas",
-        country: "Brasil",
-        created_at: "2021-07-30T13:26:22.560376",
-        updated_at: null,
-      },
-    ]);
+    apiMock
+      .onGet(`/users/withoutCurrentUser/2`, {
+        headers: { Authorization: `Bearer ${mockSessionStorage.access_token}` },
+      })
+      .reply(200, [
+        {
+          id: 1,
+          name: "Daniel da Silva Marques",
+          pis: "13319226648",
+          document: "06408268307",
+          password: "12345678",
+          address: "Rua Maria das Graças da Silva",
+          complement: "Casa",
+          state: "CE",
+          email: "daniel.silva.city@gmail.com",
+          zipcode: 62900000,
+          number: 222,
+          city: "Russas",
+          country: "Brasil",
+          created_at: "2021-07-30T13:26:22.560376",
+          updated_at: null,
+        },
+      ]);
 
     const { getByText, getByTestId } = render(<Users />);
 
@@ -50,17 +57,15 @@ describe("Users", () => {
 
     expect(getByText("Daniel da Silva Marques")).toBeTruthy();
     expect(getByText("daniel.silva.city@gmail.com")).toBeTruthy();
-    expect(getByTestId("remove-user-1")).toBeTruthy();
-    expect(getByTestId("edit-user-1")).toBeTruthy();
+    expect(getByTestId("remove-user-06408268307")).toBeTruthy();
+    expect(getByTestId("edit-user-06408268307")).toBeTruthy();
   });
 
   it("should be able to add a new user", async () => {
-    apiMock.onGet("users").reply(200, []);
-
     const { getByText, getByTestId, getByPlaceholderText } = render(<Users />);
 
-    act(() => {
-      fireEvent.click(getByText("Novo usuário"));
+    await act(async () => {
+      await fireEvent.click(getByText("Novo usuário"));
     });
 
     const inputName = getByPlaceholderText("Digite o nome do usuário");
@@ -108,52 +113,63 @@ describe("Users", () => {
     expect(inputState.value).toBe("CE");
     expect(inputCountry.value).toBe("Brasil");
 
-    apiMock.onPost("users").reply(200, {
-      id: 1,
-      name: "Victor Sebastião Enzo Silveira",
-      document: "05087942857",
-      pis: "13319226648",
-      email: "victorsebastiaoenzosilveira_@br.pwc.com",
-      password: "12345678",
-      zipcode: "02817040",
-      address: "Rua Altônia",
-      number: 234,
-      complement: "Casa",
-      city: "São Paulo",
-      state: "SP",
-      country: "Brasil",
-    });
+    await apiMock.onPost("users").reply(
+      200,
+      {
+        id: 2,
+        name: "Victor Sebastião Enzo Silveira",
+        document: "05087942857",
+        pis: "13319226648",
+        email: "victorsebastiaoenzosilveira_@br.pwc.com",
+        password: "12345678",
+        zipcode: "02817040",
+        address: "Rua Altônia",
+        number: 234,
+        complement: "Casa",
+        city: "São Paulo",
+        state: "SP",
+        country: "Brasil",
+      },
+      { Authorization: `Bearer ${mockSessionStorage.access_token}` }
+    );
 
     await act(async () => {
-      fireEvent.click(getByTestId("add-user-button"));
+      await fireEvent.click(getByTestId("add-user-button"));
     });
 
     expect(getByText("Victor Sebastião Enzo Silveira")).toBeTruthy();
+    // Acrescentado CPF: na frente do CPF, devido o template ter esse termo indicativo
+    expect(getByText("CPF: 05087942857")).toBeTruthy();
+    expect(getByText("victorsebastiaoenzosilveira_@br.pwc.com")).toBeTruthy();
 
-    expect(getByTestId("remove-user-1")).toBeTruthy();
-    expect(getByTestId("edit-user-1")).toBeTruthy();
+    expect(getByTestId("remove-user-05087942857")).toBeTruthy();
+    expect(getByTestId("edit-user-05087942857")).toBeTruthy();
   });
 
   it("should be able to edit a user", async () => {
-    apiMock.onGet("users").reply(200, [
-      {
-        id: 1,
-        name: "Daniel da Silva Marques",
-        pis: "13319226648",
-        document: "06408268307",
-        password: "12345678",
-        address: "Rua Maria das Graças da Silva",
-        complement: "Casa",
-        state: "CE",
-        created_at: "2021-07-30T13:26:22.560376",
-        email: "daniel.silva.city@gmail.com",
-        zipcode: 62900000,
-        number: 222,
-        city: "Russas",
-        country: "Brasil",
-        updated_at: null,
-      },
-    ]);
+    apiMock
+      .onGet("users", {
+        headers: { Authorization: `Bearer ${mockSessionStorage.access_token}` },
+      })
+      .reply(200, [
+        {
+          id: 1,
+          name: "Daniel da Silva Marques",
+          pis: "13319226648",
+          document: "06408268307",
+          password: "12345678",
+          address: "Rua Maria das Graças da Silva",
+          complement: "Casa",
+          state: "CE",
+          created_at: "2021-07-30T13:26:22.560376",
+          email: "daniel.silva.city@gmail.com",
+          zipcode: 62900000,
+          number: 222,
+          city: "Russas",
+          country: "Brasil",
+          updated_at: null,
+        },
+      ]);
 
     const { getByText, getByTestId, getByPlaceholderText } = render(<Users />);
 
@@ -162,11 +178,11 @@ describe("Users", () => {
       { timeout: 200 }
     );
 
-    expect(getByTestId("remove-user-1")).toBeTruthy();
-    expect(getByTestId("edit-user-1")).toBeTruthy();
+    expect(getByTestId("remove-user-06408268307")).toBeTruthy();
+    expect(getByTestId("edit-user-06408268307")).toBeTruthy();
 
-    act(() => {
-      fireEvent.click(getByTestId("edit-user-1"));
+    await act(async () => {
+      fireEvent.click(getByTestId("edit-user-06408268307"));
     });
 
     const inputName = getByPlaceholderText("Digite o nome do usuário");
@@ -214,56 +230,70 @@ describe("Users", () => {
     expect(inputState.value).toBe("CE");
     expect(inputCountry.value).toBe("Brasil");
 
-    apiMock.onPut("users/1").reply(200, {
-      id: 1,
-      name: "Victor Sebastião Enzo Silveira",
-      document: "05087942857",
-      pis: "13319226648",
-      email: "victorsebastiaoenzosilveira_@br.pwc.com",
-      password: "12345678",
-      zipcode: "02817040",
-      address: "Rua Altônia",
-      number: 234,
-      complement: "Casa",
-      city: "São Paulo",
-      state: "SP",
-      country: "Brasil",
-    });
+    apiMock.onPut("users/1").reply(
+      200,
+      {
+        id: 1,
+        name: "Victor Sebastião Enzo Silveira",
+        document: "05087942857",
+        pis: "13319226648",
+        email: "victorsebastiaoenzosilveira_@br.pwc.com",
+        password: "12345678",
+        zipcode: "02817040",
+        address: "Rua Altônia",
+        number: 234,
+        complement: "Casa",
+        city: "São Paulo",
+        state: "SP",
+        country: "Brasil",
+      },
+      {
+        Authorization: `Bearer ${mockSessionStorage.access_token}`,
+      }
+    );
 
     await act(async () => {
       fireEvent.click(getByTestId("edit-user-button"));
     });
 
     expect(getByText("Victor Sebastião Enzo Silveira")).toBeTruthy();
+    expect(getByText("CPF: 05087942857")).toBeTruthy();
     expect(getByText("victorsebastiaoenzosilveira_@br.pwc.com")).toBeTruthy();
-
-    expect(getByTestId("remove-user-1")).toBeTruthy();
-    expect(getByTestId("edit-user-1")).toBeTruthy();
+    expect(getByTestId("remove-user-05087942857")).toBeTruthy();
+    expect(getByTestId("edit-user-05087942857")).toBeTruthy();
   });
 
   it("should be able to remove a user", async () => {
-    apiMock.onGet("users").reply(200, [
-      {
-        id: 1,
-        name: "Daniel da Silva Marques",
-        pis: "13319226648",
-        document: "06408268307",
-        password: "12345678",
-        address: "Rua Maria das Graças da Silva",
-        complement: "Casa",
-        state: "CE",
-        created_at: "2021-07-30T13:26:22.560376",
-        email: "daniel.silva.city@gmail.com",
-        zipcode: 62900000,
-        number: 222,
-        city: "Russas",
-        country: "Brasil",
-        updated_at: null,
-      },
-    ]);
+    apiMock
+      .onGet("users", {
+        headers: { Authorization: `Bearer ${mockSessionStorage.access_token}` },
+      })
+      .reply(200, [
+        {
+          id: 1,
+          name: "Daniel da Silva Marques",
+          pis: "13319226648",
+          document: "06408268307",
+          password: "12345678",
+          address: "Rua Maria das Graças da Silva",
+          complement: "Casa",
+          state: "CE",
+          created_at: "2021-07-30T13:26:22.560376",
+          email: "daniel.silva.city@gmail.com",
+          zipcode: 62900000,
+          number: 222,
+          city: "Russas",
+          country: "Brasil",
+          updated_at: null,
+        },
+      ]);
 
     // HTTP: 204 => Successful and doesn't need to leave the page
-    apiMock.onDelete("users/1").reply(204);
+    apiMock
+      .onDelete("users/1", {
+        headers: { Authorization: `Bearer ${mockSessionStorage.access_token}` },
+      })
+      .reply(204);
 
     const { getByText, getByTestId } = render(<Users />);
 
@@ -272,11 +302,11 @@ describe("Users", () => {
       { timeout: 200 }
     );
 
-    expect(getByTestId("remove-user-1")).toBeTruthy();
-    expect(getByTestId("edit-user-1")).toBeTruthy();
+    expect(getByTestId("remove-user-06408268307")).toBeTruthy();
+    expect(getByTestId("edit-user-06408268307")).toBeTruthy();
 
     await act(async () => {
-      fireEvent.click(getByTestId("remove-user-1"));
+      fireEvent.click(getByTestId("remove-user-06408268307"));
     });
 
     expect(getByTestId("user-list")).toBeEmptyDOMElement();

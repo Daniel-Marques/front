@@ -99,10 +99,6 @@ const Signin: React.FC = () => {
     [history, setCookies]
   );
 
-  const handleSignup = useCallback(async (data) => {
-    console.log(data);
-  }, []);
-
   return (
     <>
       <LoadingScreen

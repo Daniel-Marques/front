@@ -95,7 +95,9 @@ const Users: React.FC = () => {
 
       setUsers([...users, response.data]);
     } catch (error) {
-      console.log(error);
+      toast(`Ooops! ${error.response.data["detail"]}`, {
+        position: "top-right",
+      });
     }
   }
 
@@ -263,6 +265,13 @@ const Users: React.FC = () => {
               />
             ))}
         </div>
+
+        {!loading && users.length <= 0 && (
+          <div className="alert alert-info">
+            <i className="fa fa-exclamation-circle mr-3"></i>
+            Ainda não existem usuários cadastrados
+          </div>
+        )}
       </div>
     </>
   );

@@ -189,7 +189,7 @@ const Profile: React.FC = () => {
         });
     } catch (error) {
       console.log(error);
-      toast.info(
+      toast.error(
         `${error.response.data["detail"]}`,
         {
           position: "top-right",

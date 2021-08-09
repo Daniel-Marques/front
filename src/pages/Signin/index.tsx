@@ -80,7 +80,7 @@ const Signin: React.FC = () => {
             }
           })
           .catch((err) => {
-            toast(`Ooops! ${err.response.data['detail']}`, {
+            toast(`Ooops! ${err.response.data["detail"]}`, {
               position: "top-right",
             });
           });

@@ -189,6 +189,12 @@ const Profile: React.FC = () => {
         });
     } catch (error) {
       console.log(error);
+      toast.info(
+        `${error.response.data["detail"]}`,
+        {
+          position: "top-right",
+        }
+      );
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -242,7 +242,7 @@ const Profile: React.FC = () => {
                         mask="999.999.999-99"
                         name="document"
                         placeholder="Ex: 000.000.000-00"
-                        value={document}
+                        defaultValue={document}
                       />
                     </div>
 
@@ -252,7 +252,7 @@ const Profile: React.FC = () => {
                         mask="999.99999.99-9"
                         name="pis"
                         placeholder="Ex: 000.00000.00-0"
-                        value={pis}
+                        defaultValue={pis}
                       />
                     </div>
 

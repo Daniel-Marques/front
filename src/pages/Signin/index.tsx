@@ -116,6 +116,7 @@ const Signin: React.FC = () => {
             email: data.email,
           },
           access_token: data.access_token,
+
         };
 
         if (data) {

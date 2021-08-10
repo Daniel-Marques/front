@@ -14,7 +14,7 @@ import { userEditSchema } from "../../validations/UserEditValidation";
 import Header from "../../components/Header";
 import Saudation from "../../components/Saudation";
 import Input from "../../components/Input";
-import InputMask from "../../components/InputMask";
+// import InputMask from "../../components/InputMask";
 
 interface IEditProfileData {
   name: string;
@@ -189,14 +189,11 @@ const Profile: React.FC = () => {
         });
     } catch (error) {
       console.log(error);
-      toast.error(
-        `${error.response.data["detail"]}`,
-        {
-          position: "top-right",
-        }
-      );
+      toast.error(`${error.response.data["detail"]}`, {
+        position: "top-right",
+      });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function redirectPage() {
@@ -238,8 +235,7 @@ const Profile: React.FC = () => {
 
                     <div className="col-lg-6 mb-3">
                       <label>CPF</label>
-                      <InputMask
-                        mask="999.999.999-99"
+                      <Input
                         name="document"
                         placeholder="Ex: 000.000.000-00"
                         defaultValue={document}
@@ -248,8 +244,7 @@ const Profile: React.FC = () => {
 
                     <div className="col-lg-6 mb-3">
                       <label>Número do PIS</label>
-                      <InputMask
-                        mask="999.99999.99-9"
+                      <Input
                         name="pis"
                         placeholder="Ex: 000.00000.00-0"
                         defaultValue={pis}

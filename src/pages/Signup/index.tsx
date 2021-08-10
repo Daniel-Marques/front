@@ -162,7 +162,7 @@ const Signin: React.FC = () => {
       <ToastContainer transition={Flip} />
 
       <div className="login-content">
-        <div className="nk-block toggled" id="l-register">
+        <div className="nk-block toggled" id="l-register" style={{ minHeight: "80vh" }}>
           <img
             src="./assets/img/logo.png"
             alt="Logo"

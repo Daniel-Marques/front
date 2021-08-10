@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useCookies, Cookies } from "react-cookie";
 import LoadingScreen from "react-loading-screen";
+import { GoogleLogin } from "react-google-login";
 
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -99,6 +100,63 @@ const Signin: React.FC = () => {
     [history, setCookies]
   );
 
+  const handleSigninGoogle = useCallback(async (data) => {
+    const dataPrepare = {
+      name: data.profileObj.name,
+      email: data.profileObj.email,
+    };
+
+    try {
+      await api.post("auth/google", dataPrepare).then((response) => {
+        const { data } = response;
+
+        const dataSendStorage = {
+          user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+          },
+          access_token: data.token,
+        };
+
+        if (data) {
+          /* Create localStorage */
+          localStorage.setItem(
+            "@newmission:data",
+            JSON.stringify(dataSendStorage)
+          );
+
+          /* Create cookie */
+          let expires = new Date();
+          expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+          setCookies("@newmission:access_token", data.access_token, {
+            path: "/",
+            expires,
+          });
+
+          setLoading(true);
+
+          setTimeout(() => {
+            /* Redirect for router user */
+            history.push("/users");
+            setLoading(false);
+          }, 5000);
+        }
+      });
+    } catch (err) {
+      toast.info(`Ooops! ${err.response.data["detail"]}`, {
+        position: "top-right",
+      });
+
+      setTimeout(() => {
+        /* Redirect for router user */
+        history.push("/signup");
+        setLoading(false);
+      }, 5000);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <LoadingScreen
@@ -165,7 +223,7 @@ const Signin: React.FC = () => {
 
           <div
             className="nk-navigation nk-lg-ic"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
           >
             <a
               href="/signup"
@@ -177,22 +235,13 @@ const Signin: React.FC = () => {
               <span>Criar conta</span>
             </a>
 
-            <a
-              href="#!"
-              data-ma-block="#l-register"
-              style={{
-                backgroundColor: "#FFF",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src="./assets/img/firebase.png"
-                alt="Logo Firebase"
-                style={{ width: 18, height: 18, marginLeft: 6 }}
-              />
-              <span style={{ color: "#a4a4a4", marginLeft: 6 }}>Firebase</span>
-            </a>
+            <GoogleLogin
+              clientId="402158444851-49b3di90bq9lg21ac6a6bvj8mu0nvcpl.apps.googleusercontent.com"
+              buttonText="Continuar com o Google"
+              onSuccess={handleSigninGoogle}
+              onFailure={handleSigninGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
           </div>
         </div>
       </div>

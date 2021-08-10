@@ -218,7 +218,7 @@ const Signin: React.FC = () => {
           </div>
           <div
             className="nk-navigation rg-ic-stl"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center"}}
           >
             <a href="/" data-ma-block="#l-login" style={{ marginRight: 5 }}>
               <i className="notika-icon notika-left-arrow"></i>

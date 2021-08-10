@@ -26,7 +26,7 @@ interface ISignup {
   password: String;
 }
 
-const Signin: React.FC = () => {
+const Signup: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookies();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -239,4 +239,4 @@ const Signin: React.FC = () => {
   );
 };
 
-export default Signin;
+export default Signup;

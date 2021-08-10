@@ -3,11 +3,10 @@ import { useHistory } from "react-router";
 import { useCookies, Cookies } from "react-cookie";
 import LoadingScreen from "react-loading-screen";
 import { GoogleLogin } from "react-google-login";
+import api from "../../services/api";
 
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import api from "../../services/api";
 
 import { FormHandles } from "@unform/core";
 import InputSignin from "../../components/InputSignin";

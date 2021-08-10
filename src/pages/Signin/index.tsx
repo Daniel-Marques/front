@@ -236,7 +236,7 @@ const Signin: React.FC = () => {
             </a>
 
             <GoogleLogin
-              clientId="402158444851-49b3di90bq9lg21ac6a6bvj8mu0nvcpl.apps.googleusercontent.com"
+              clientId={`${process.env.REACT_APP_CREDENTIALS_GOOGLE}`}
               buttonText="Continuar com o Google"
               onSuccess={handleSigninGoogle}
               onFailure={handleSigninGoogle}
